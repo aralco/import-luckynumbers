@@ -1,0 +1,647 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"font",
+				"font-style"
+			],
+			[
+				"alert",
+				"native.showAlert()	native"
+			],
+			[
+				"txtBoxNative",
+				"txtBoxNative:addEventListener"
+			],
+			[
+				"ut",
+				"utility:printTable"
+			],
+			[
+				"display.ac",
+				"display.actualContentHeight	display"
+			],
+			[
+				"remove",
+				"removeSelf()	DisplayObject"
+			],
+			[
+				"a",
+				"attr"
+			],
+			[
+				"atr",
+				"removeAttr"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "index.html",
+			"settings":
+			{
+				"buffer_size": 3609,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "app.js",
+			"settings":
+			{
+				"buffer_size": 859,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "controllers/misprogramaciones_controller.js",
+			"settings":
+			{
+				"buffer_size": 1639,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "templates/misprogramaciones.html",
+			"settings":
+			{
+				"buffer_size": 2887,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "css/demo.css",
+			"settings":
+			{
+				"buffer_size": 6536,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "controllers/directives_controller.js",
+			"settings":
+			{
+				"buffer_size": 1221,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 287.0,
+		"selected_items":
+		[
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 476.0
+	},
+	"console":
+	{
+		"height": 126.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/Development/LuckyNClient/app",
+		"/Development/LuckyNClient/app/bootstrap",
+		"/Development/LuckyNClient/app/bootstrap/css",
+		"/Development/LuckyNClient/app/controllers",
+		"/Development/LuckyNClient/app/css",
+		"/Development/LuckyNClient/app/templates"
+	],
+	"file_history":
+	[
+		"/Development/LuckyNClient/app/templates/nuevaprogramacion.html",
+		"/Development/LuckyNClient/app/controllers/nuevaprogramacion_controller.js",
+		"/Development/LuckyNClient/app/controllers/menu_controller.js",
+		"/Development/LuckyNClient/app/controllers/directives_controller.js",
+		"/Development/LuckyNClient/app/directives/modal_directive.js",
+		"/Development/LuckyNClient/app/directives/directive_templates/modal_template.html",
+		"/Development/LuckyNClient/app/templates/modal.html",
+		"/Development/LuckyNClient/app/css/flat-ui.css",
+		"/Development/LuckyNClient/app/css/demo.css",
+		"/Development/LuckyNClient/app/index.html",
+		"/install/Flat UI PSD & HTML - Personal License/HTML/UI/Flat-UI-Pro-1.2.4/template.html",
+		"/Development/LuckyNClient/app_old/index.html",
+		"/Development/LuckyNClient/node_modules/grunt/lib/grunt/config.js",
+		"/Development/LuckyNClient/node_modules/grunt/lib/grunt/option.js",
+		"/Development/LuckyNClient/node_modules/grunt/package.json",
+		"/install/fui-angular-master/demo/index.html",
+		"/Development/abiertocbba/AbiertoDeCochabamba/config.xml",
+		"/Development/abiertocbba/AbiertoDeCochabamba/gulpfile.js",
+		"/Development/abiertodelvalle/config.xml",
+		"/Development/abiertodelapaz/package.json",
+		"/Development/abiertodelapaz/platforms/android/src/com/islandofthemoon/tigogolf/tigoGolfValle.java",
+		"/Development/abiertodelapaz/plugins/android.json",
+		"/Development/abiertodelapaz/www/card.html",
+		"/Development/abiertodelapaz/www/js/services.js",
+		"/Development/abiertodelapaz/www/templates/tabs.html",
+		"/Development/abiertodelapaz/www/templates/tab-dash.html",
+		"/Development/abiertodelapaz/www/templates/tab-tabla.html",
+		"/Development/abiertodelapaz/www/js/javascript2.js",
+		"/Development/abiertodelapaz/www/card/javascript2.js",
+		"/Development/abiertodelapaz/www/card/index.html",
+		"/Development/abiertodelapaz/www/templates/tab-twitter.html",
+		"/Development/abiertodelapaz/www/js/app.js",
+		"/Development/abiertodelapaz/www/css/demo.css",
+		"/Development/abiertodelapaz/platforms/ios/AbiertodeLaPaz/AbiertodeLaPaz-Info.plist",
+		"/Development/abiertodelapaz/www/templates/friend-detail.html",
+		"/Development/abiertodelapaz/www/templates/tab-account.html",
+		"/Development/abiertodelapaz/www/templates/tab-friends.html",
+		"/Development/abiertodelapaz/www/js/controllers.js",
+		"/Development/abiertodelapaz/www/templates/tab-country.html",
+		"/Development/abiertodelapaz/www/templates/tab-agenda.html",
+		"/Development/abiertodelapaz/www/css/application.css",
+		"/Development/abiertodelapaz/www/index.html",
+		"/Development/abiertodelapaz/config.xml",
+		"/Development/morbido/text/respuesta.html",
+		"/Development/morbido/text/welcome.html",
+		"/Development/morbido/text/pregunta.html",
+		"/Development/morbido/text/avatar.html",
+		"/Development/morbido/text/registro.html",
+		"/Development/morbido/src/welcomeView.lua",
+		"/Development/morbido/model/userOperations.lua",
+		"/Development/morbido/database/DBHandler.lua",
+		"/Development/morbido/build.settings",
+		"/Development/morbido/src/avatarView.lua",
+		"/Development/morbido/src/levelLoader.lua",
+		"/Development/morbido/src/introView.lua",
+		"/Development/morbido/src/categoriesView.lua",
+		"/Development/morbido/text/base.css",
+		"/Development/morbido/MGlobal.lua",
+		"/Development/morbido/src/questionView.lua",
+		"/Development/morbido/src/indexView.lua",
+		"/Development/morbido/src/menuView.lua",
+		"/Development/morbido/main.lua",
+		"/Development/morbido/text/intro.html",
+		"/Development/morbido/ui/animations.lua",
+		"/Development/morbido/ui/ui.lua",
+		"/Development/morbido/src/newUserView.lua",
+		"/Development/morbido/ui/sounds.lua",
+		"/Development/morbido/src/answerView.lua",
+		"/Development/morbido/src/registerView.lua",
+		"/Development/morbido/utility.lua",
+		"/Development/morbido/config.lua",
+		"/Development/morbido/src/questionView.lua.orig",
+		"/Development/morbido/src/questionView.old",
+		"/Development/morbido/model/utils.lua",
+		"/Development/morbido/src/avatarPopup.lua",
+		"/Development/morbido/src/historyView.lua",
+		"/Development/morbido/translations.lua",
+		"/Development/morbido/src/loginView.lua",
+		"/Development/morbido/src/coverView.lua",
+		"/Development/morbido/src/storeView.lua",
+		"/Development/morbido/data/User.lua",
+		"/Development/morbido/libs/mod_parse.lua",
+		"/Development/hinchapelotas/src/Hinchapelotas/WebBundle/Resources/views/layout.html.twig",
+		"/Development/VIVA/Caras/webcam/webcam.js",
+		"/Development/VIVA/Caras/webcam/index.html",
+		"/Development/VIVA/Caras/webcutter/index.html",
+		"/Development/VIVA/Caras/viewvideo/v.html",
+		"/Development/VIVA/Caras/recortacaras/index.html",
+		"/Development/VIVA/Caras/upload/js/jquery-ajax-image-upload.js",
+		"/Development/VIVA/Caras/recortacaras/vineta.js",
+		"/Development/VIVA/Caras/viewvideo/index.html",
+		"/Development/VIVA/Caras/webcutter/vineta.js",
+		"/Development/VIVA/Caras/camera/index.html",
+		"/Development/VIVA/Caras/JS/fb_iotm_tools.js",
+		"/Development/VIVA/Caras/recortacaras/prototipo.js",
+		"/Development/VIVA/Caras/webcutter/prototipo.js",
+		"/Development/VIVA/Caras/facebook/index.html",
+		"/Development/VIVA/Caras/facebook/save.php",
+		"/Development/VIVA/Caras/facebook/csphotoselector.js",
+		"/Development/VIVA/Caras/facebook/example.js",
+		"/Development/VIVA/Caras/facebook/csphotoselector.css",
+		"/Development/VIVA/Caras/webcam/index.old.html",
+		"/Development/VIVA/Caras/upload/index.html",
+		"/Development/VIVA/Caras/newvideo/s.js",
+		"/Development/VIVA/Caras/newvideo/v.html",
+		"/Development/VIVA/Caras/upload/php/phpUploadImage.php",
+		"/Development/VIVA/Caras/viewvideo/index2.html",
+		"/Development/VIVA/Caras/caras-hinchapelotas.hyperesources/carashinchapelotas_hype_generated_script.js",
+		"/Development/VIVA/Caras/caras-hinchapelotas.hyperesources/8C3BFE-restorable.plist",
+		"/Development/VIVA/Caras/recortacaras/bootstrap.css",
+		"/Development/VIVA/Caras/upload/css/style.css",
+		"/Development/VIVA/Caras/caras-hinchapelotas.html",
+		"/Development/VIVA/Caras/webcam/test.php",
+		"/Development/VIVA/Caras/webcam/test.html",
+		"/Development/VIVA/Caras/webcam/test2.html",
+		"/Development/VIVA/Caras/camera/say-cheese.css",
+		"/Development/VIVA/Caras/camera/say-cheese.js",
+		"/Development/VIVA/Caras/upload/js/script.js",
+		"/Development/VIVA/Caras/upload/js/plugins.js",
+		"/Development/VIVA/Caras/camera/test.html",
+		"/Development/hinchapelotas/src/Hinchapelotas/WebBundle/Resources/views/Default/app_hinchapelotas.html.twig",
+		"/Development/hinchapelotas/js/angular-route.js",
+		"/Development/hinchapelotas/src/Hinchapelotas/WebBundle/Resources/views/Default/home.html.twig",
+		"/Users/Carlos/Library/Application Support/Sublime Text 3/Packages/Default/Preferences.sublime-settings",
+		"/Development/dealertrack/autorev-final/findacar.lua",
+		"/Development/dealertrack/autorev-final/uielements.lua",
+		"/Development/dealertrack/autorev-final/findacarNew.lua"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 93.0,
+		"where_history":
+		[
+			"/Development/abiertodelapaz",
+			"/Development/abiertodelapaz/www",
+			"/Development/morbido",
+			"/Development/VIVA/Caras",
+			"/Development/VIVA/Caras/upload",
+			"/Development/VIVA/Caras",
+			"/Development/VIVA/Caras/upload",
+			"/Development/hinchapelotas"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"silver",
+			"fonts",
+			".tigogolf",
+			".abiertodelvalle",
+			"del Valle",
+			"created",
+			"navFooter[",
+			"logo",
+			"setCurrentTime",
+			"remaining_time",
+			"setFirstUserInfo",
+			"addUserLives",
+			"lastname",
+			"no lee el file",
+			"user",
+			"update",
+			"updateUsers",
+			"getXNavPosition",
+			"getYNavPosition",
+			"showNewUser",
+			"level",
+			"footerParams",
+			"setUserPreferences",
+			"startDatabase",
+			"initDatabase",
+			"images/",
+			"createDatabase",
+			"button",
+			"Addseparator",
+			"getDimensions",
+			"createButtonsWithIcon",
+			"userDefinedLanguage",
+			"showRegister",
+			"fontData",
+			"getSpriteSheetData",
+			"defaultButtonImage",
+			"Clip",
+			"cara",
+			"master",
+			"id",
+			"showAlbumSelector",
+			"buildAlbumSelector",
+			"id",
+			"getLoginStatus",
+			"sorry",
+			"friend",
+			"your friend",
+			"your friendo",
+			"console.log(\"completo...\");",
+			"http",
+			"reload",
+			"load",
+			"hinchapelotas.islandofthemoon.com",
+			".progress-bar-danger",
+			"344",
+			"api_url",
+			"php",
+			"upload_results",
+			"Clip",
+			"img.src",
+			"btn-success",
+			"submit-btn",
+			".jpg",
+			"img-data",
+			"\"img-data\"",
+			"img-data",
+			"load",
+			"btn btn-success",
+			"350",
+			"image_original_wrap",
+			"hinchapelotas.islandofthemoon.com",
+			"header.png",
+			"header"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"hourglass",
+			"www.hinchapelotas.com.bo",
+			"hinchapelotas.com.bo"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 2,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "index.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3609,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								689,
+								689
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true,
+							"word_separators": "/\\()\"'-:,;<>~!@#$%^&*|+=[]{}`~?"
+						},
+						"translation.x": 0.0,
+						"translation.y": 212.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "app.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 859,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								707,
+								680
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true,
+							"word_separators": "/\\()\"'-:,;<>~!@#$%^&*|+=[]{}`~?"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "controllers/misprogramaciones_controller.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1639,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1446,
+								1627
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"word_separators": "/\\()\"'-:,;<>~!@#$%^&*|+=[]{}`~?"
+						},
+						"translation.x": 0.0,
+						"translation.y": 147.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "templates/misprogramaciones.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2887,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1196,
+								1196
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true,
+							"word_separators": "/\\()\"'-:,;<>~!@#$%^&*|+=[]{}`~?"
+						},
+						"translation.x": 0.0,
+						"translation.y": 402.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "css/demo.css",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 6536,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CSS/CSS.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "controllers/directives_controller.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1221,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1102,
+								1102
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 0.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"project": "luckyn.sublime-project",
+	"replace":
+	{
+		"height": 42.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 259.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

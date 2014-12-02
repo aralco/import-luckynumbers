@@ -1,0 +1,93 @@
+<h3>Usuarios</h3>  
+<style>  
+    #mydiv {  
+        position: absolute;  
+        top: 0;  
+        left: 0;  
+        width: 100%;  
+        height: 100%;  
+        z-index: 1000;  
+        background-color: grey;  
+        opacity: .8;  
+    }  
+  
+</style>  
+<div data-ng-app data-ng-controller="UsuariosController" class="container">  
+    <strong class="error">{{ error }}</strong>  
+
+    <p data-ng-hide="addMode"><a data-ng-click="toggleAdd()" href="javascript:;" class="btn btn-primary">Agregar nuevo usuario</a></p>  
+   
+    <form name="addFriend" data-ng-show="addMode" style="width:600px;margin:0px auto;">  
+     <div class="dialog dialog-success">
+        <label>Nombre completo:</label><input type="text" data-ng-model="newUser.name" required />  <br />
+        <label>Nombre (login):</label><input type="text" data-ng-model="newUser.username" required />  <br />
+        <label>Rol:</label><input type="text" data-ng-model="newUser.role" required />  <br />
+        <label>Descripcion:</label><input type="text" data-ng-model="newUser.description" required />  <br />
+        <label>E-mail:</label><input type="text" data-ng-model="newUser.email1" required />  <br />
+        <label>Teléfono:</label><input type="text" data-ng-model="newUser.phone1" required />  <br />
+        <label>Habilitado:</label><input type="checkbox" ng-model="newUser.enabled" required />  <br />
+        <br />
+        <br />
+        <input type="submit" value="Agregar" data-ng-click="add()" data-ng-disabled="!addFriend.$valid" class="btn btn-primary" />  
+        <input type="button" value="Cancelar" data-ng-click="toggleAdd()" class="btn btn-primary" />  
+        <br /><br />  
+        </div>
+    </form>  
+
+    <table class="table table-bordered table-hover">  
+        <tr>  
+            <th>#</th>  
+            <td>Nombre completo</td>  
+            <th>Nombre (login)</th>  
+            <th>Rol</th>  
+            <th>Descripcion</th>  
+            <th>E-mail</th>  
+            <th>Teléfono</th>  
+            <th>Habilitado</th>  
+        </tr>  
+  
+        <tr data-ng-repeat="newUser in usuarios">  
+            <td><strong data-ng-hide="ElUsuario">{{ newUser.id }}</strong></td>  
+            <td>  
+                <p data-ng-hide="ElUsuario">{{ newUser.name }}</p>  
+                <input data-ng-show="ElUsuario" type="text" data-ng-model="newUser.name" />  
+            </td>  
+            <td>  
+                <p data-ng-hide="ElUsuario">{{ newUser.username }}</p>  
+                <input data-ng-show="ElUsuario" type="text" data-ng-model="newUser.username" />  
+            </td>  
+            <td>  
+                <p data-ng-hide="ElUsuario">{{ newUser.role }}</p>  
+                <input data-ng-show="ElUsuario" type="text" data-ng-model="newUser.role" />  
+            </td>  
+            <td>  
+                <p data-ng-hide="ElUsuario">{{ newUser.description }}</p>  
+                <input data-ng-show="ElUsuario" type="text" data-ng-model="newUser.description" />  
+            </td>  
+            <td>  
+                <p data-ng-hide="ElUsuario">{{ newUser.email1 }}</p>  
+                <input data-ng-show="ElUsuario" type="text" data-ng-model="newUser.email1" />  
+            </td>  
+            <td>  
+                <p data-ng-hide="ElUsuario">{{ newUser.phone1 }}</p>  
+                <input data-ng-show="ElUsuario" type="text" data-ng-model="newUser.phone1" />  
+            </td>  
+            <td>  
+                <p data-ng-hide="ElUsuario">{{ newUser.enabled }}</p>  
+                <label data-ng-show="ElUsuario">Habilitado:</label><input data-ng-show="ElUsuario" type="checkbox" ng-model="newUser.enabled" required />
+            </td>  
+            <td>  
+                <p data-ng-hide="ElUsuario">
+                <a href="javascript:;" class="btn btn-sm btn-primary" data-ng-click="toggleEdit()"><span class="fui-new"></span>&nbsp;&nbsp;Editar</a>
+                </p>
+                
+                <p data-ng-show="ElUsuario">
+                <a href="javascript:;" class="btn btn-sm btn-primary" data-ng-click="save(newUser)"><span class="fui-check-inverted"></span>&nbsp;&nbsp;Guardar</a>
+                <a href="javascript:;" class="btn btn-sm btn-primary" data-ng-click="toggleEdit()"><span class="fui-cross-inverted"></span>&nbsp;&nbsp;Cancelar</a>
+                </p>
+            </td>  
+        </tr>  
+    </table>  
+    <hr />  
+  
+</div>  

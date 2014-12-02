@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="bo.net.tigo.model.Task" table="ILN_TASK" schema="IMPORTLUCKY">
+        <id name="id" type="java.lang.Long">
+            <column name="ILN_TASK_ID"/>
+            <generator class="native">
+                <param name="sequence">ILN_TASK_SEQ_ID</param>
+            </generator>
+        </id>
+        <property name="type" type="java.lang.String">
+            <column name="ILN_TASK_TYPE"/>
+        </property>
+        <property name="city" type="java.lang.Integer">
+            <column name="ILN_TASK_CITY"/>
+        </property>
+        <property name="from" type="java.lang.String">
+            <column name="ILN_TASK_FROM"/>
+        </property>
+        <property name="to" type="java.lang.String">
+            <column name="ILN_TASK_TO"/>
+        </property>
+        <property name="executionDate" type="java.util.Date">
+            <column name="ILN_TASK_EXECUTION_DATE"/>
+        </property>
+        <property name="status" type="java.lang.String">
+            <column name="ILN_TASK_STATUS"/>
+        </property>
+        <property name="processed" type="java.lang.Integer">
+            <column name="ILN_TASK_PROCESSED"/>
+        </property>
+        <property name="passed" type="java.lang.Integer">
+            <column name="ILN_TASK_PASSED"/>
+        </property>
+        <property name="failed" type="java.lang.Integer">
+            <column name="ILN_TASK_FAILED"/>
+        </property>
+        <property name="summary" type="java.lang.String">
+            <column name="ILN_TASK_SUMMARY" sql-type="clob"/>
+        </property>
+        <property name="coverage" type="java.lang.String">
+            <column name="ILN_TASK_COVERAGE"/>
+        </property>
+        <property name="urlin" type="java.lang.String">
+            <column name="ILN_TASK_URL_IN"/>
+        </property>
+        <property name="urlout" type="java.lang.String">
+            <column name="ILN_TASK_URL_OUT"/>
+        </property>
+        <property name="lnNumbersInBccs" type="java.lang.Long">
+            <column name="ILN_TASK_LN_IN_BCCS"/>
+        </property>
+        <property name="reservedLuckyNumbers" type="java.lang.Long">
+            <column name="ILN_TASK_RESERVED_LUCKY_NUMBER"/>
+        </property>
+        <property name="rolledBackNumbers" type="java.lang.Long">
+            <column name="ILN_TASK_ROLLEDBACK_NUMBERS"/>
+        </property>
+        <property name="unlockedNumbers" type="java.lang.Long">
+            <column name="ILN_TASK_UNLOCKED_NUMBERS"/>
+        </property>
+        <property name="lcNumbersInBccs" type="java.lang.Long">
+            <column name="ILN_TASK_LC_NUMBERS_IN_BCCS"/>
+        </property>
+        <property name="createdDate" type="java.util.Date">
+            <column name="ILN_TASK_CREATED_DATE"/>
+        </property>
+        <property name="lastUpdate" type="java.util.Date">
+            <column name="ILN_TASK_LAST_UPDATE"/>
+        </property>
+        <many-to-one name="job" class="bo.net.tigo.model.Job" fetch="select">
+            <column name="ILN_JOB_ID" not-null="true"/>
+        </many-to-one>
+    </class>
+</hibernate-mapping>

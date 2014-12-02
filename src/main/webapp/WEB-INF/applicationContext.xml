@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:oauth="http://www.springframework.org/schema/security/oauth2"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:int-ftp="http://www.springframework.org/schema/integration/ftp"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/security
+       http://www.springframework.org/schema/security/spring-security.xsd
+       http://www.springframework.org/schema/security/oauth2
+       http://www.springframework.org/schema/security/spring-security-oauth2.xsd
+       http://www.springframework.org/schema/task
+       http://www.springframework.org/schema/task/spring-task.xsd
+       http://www.springframework.org/schema/integration/ftp
+       http://www.springframework.org/schema/integration/ftp/spring-integration-ftp.xsd">
+    <context:component-scan base-package="bo.net.tigo"/>
+    <mvc:annotation-driven />
+    <mvc:default-servlet-handler />
+    <context:annotation-config/>
+    <context:property-placeholder location="classpath:luckynumbers.properties"/>
+    <security:global-method-security secured-annotations="enabled" />
+
+    <!--############### PERSISTENCE ###############-->
+
+    <!--********** DB2 Spring Data Source **********-->
+
+    <bean id="as400DataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${as400.jdbc.driverClassName}"/>
+        <property name="url" value="jdbc:${as400.jdbc.type}://${as400.jdbc.host}:${as400.jdbc.port}/${as400.jdbc.schema}"/>
+        <property name="username" value="${as400.jdbc.username}"/>
+        <property name="password" value="${as400.jdbc.password}"/>
+    </bean>
+
+    <!--********** Oracle IMPORTLUCKY Spring Data Source **********-->
+    <bean id="oracleDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${oracle.jdbc.driverClassName}"/>
+        <property name="url" value="jdbc:oracle:thin:@//${oracle.jdbc.host}:${oracle.jdbc.port}/${oracle.jdbc.service.name}"/>
+        <property name="username" value="${oracle.jdbc.username}"/>
+        <property name="password" value="${oracle.jdbc.password}"/>
+    </bean>
+
+    <!--********** Oracle LUCKY_NUMBERS Spring Data Source **********-->
+    <bean id="lnOracleDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${ln.oracle.jdbc.driverClassName}"/>
+        <property name="url" value="jdbc:oracle:thin:@//${ln.oracle.jdbc.host}:${ln.oracle.jdbc.port}/${ln.oracle.jdbc.service.name}"/>
+        <property name="username" value="${ln.oracle.jdbc.username}"/>
+        <property name="password" value="${ln.oracle.jdbc.password}"/>
+    </bean>
+
+    <!--********** SessionFactory **********-->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="oracleDataSource"/>
+        <!--<property name="packagesToScan" value="bo.net.tigo.model" />-->
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
+                <prop key="hibernate.jdbc.batch_size">20</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.connection.SetBigStringTryClob">true</prop>
+                <!--On production must be changed to validate-->
+                <prop key="hibernate.hbm2ddl.auto">${valuefor.hibernate.hbm2ddl.auto}</prop>
+            </props>
+        </property>
+        <property name="mappingResources">
+            <list>
+                <value>orm/AccessLog.hbm.xml</value>
+                <value>orm/City.hbm.xml</value>
+                <value>orm/Contact.hbm.xml</value>
+                <value>orm/Job.hbm.xml</value>
+                <value>orm/Task.hbm.xml</value>
+                <value>orm/User.hbm.xml</value>
+                <value>orm/InAudit.hbm.xml</value>
+                <value>orm/OutAudit.hbm.xml</value>
+            </list>
+        </property>
+    </bean>
+
+    <!--********** TransactionManager **********-->
+    <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!--############### SECURITY ###############-->
+    <security:http pattern="/oauth/token" create-session="stateless"
+                   authentication-manager-ref="clientAuthenticationManager">
+        <security:intercept-url pattern="/oauth/token" access="IS_AUTHENTICATED_FULLY" />
+        <security:anonymous enabled="false" />
+        <security:http-basic entry-point-ref="clientAuthenticationEntryPoint" />
+        <!-- include this only if you need to authenticate clients via request parameters -->
+        <security:custom-filter ref="clientCredentialsTokenEndpointFilter" before="BASIC_AUTH_FILTER" />
+        <security:access-denied-handler ref="oauthAccessDeniedHandler" />
+    </security:http>
+
+    <security:http pattern="/luckynumbers/**" create-session="never"
+                   entry-point-ref="oauthAuthenticationEntryPoint">
+        <security:anonymous enabled="false" />
+        <security:intercept-url pattern="/luckynumbers/config/city/**" method="GET" access="ROLE_USER, ROLE_ADMIN"/>
+        <security:intercept-url pattern="/luckynumbers/config/city/**" method="POST" access="ROLE_ADMIN"/>
+        <security:intercept-url pattern="/luckynumbers/config/contact/**" method="GET" access="ROLE_USER, ROLE_ADMIN"/>
+        <security:intercept-url pattern="/luckynumbers/config/contact/**" method="POST" access="ROLE_ADMIN"/>
+        <security:intercept-url pattern="/luckynumbers/config/user/**" method="GET" access="ROLE_USER, ROLE_ADMIN"/>
+        <security:intercept-url pattern="/luckynumbers/config/user/**" method="POST" access="ROLE_ADMIN"/>
+        <security:intercept-url pattern="/luckynumbers/config/accesslog/**" method="GET" access="ROLE_ADMIN"/>
+        <security:intercept-url pattern="/luckynumbers/scheduler/**" method="GET" access="ROLE_USER, ROLE_ADMIN"/>
+        <security:intercept-url pattern="/luckynumbers/scheduler/**" method="POST" access="ROLE_USER, ROLE_ADMIN"/>
+        <security:intercept-url pattern="/luckynumbers/scheduler/**" method="PUT" access="ROLE_USER, ROLE_ADMIN"/>
+        <security:intercept-url pattern="/luckynumbers/scheduler/**" method="DELETE" access="ROLE_USER, ROLE_ADMIN"/>
+        <security:intercept-url pattern="/luckynumbers/monitor/**" method="GET" access="ROLE_USER, ROLE_ADMIN"/>
+        <security:intercept-url pattern="/luckynumbers/monitor/**" method="POST" access="ROLE_USER, ROLE_ADMIN"/>
+        <security:intercept-url pattern="/luckynumbers/sysutils/**" method="GET" access="ROLE_USER, ROLE_ADMIN"/>
+        <security:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER"/>
+        <security:access-denied-handler ref="oauthAccessDeniedHandler" />
+    </security:http>
+
+    <security:http pattern="/logout" create-session="never"
+          entry-point-ref="oauthAuthenticationEntryPoint"
+          xmlns="http://www.springframework.org/schema/security">
+        <anonymous enabled="false" />
+        <intercept-url pattern="/logout" method="GET" />
+        <security:logout invalidate-session="true" logout-url="/logout" success-handler-ref="logoutSuccessHandler"   />
+        <custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
+        <access-denied-handler ref="oauthAccessDeniedHandler" />
+    </security:http>
+
+    <!--<security:http pattern="/**" create-session="never"-->
+                   <!--entry-point-ref="oauthAuthenticationEntryPoint">-->
+        <!--<security:anonymous enabled="false" />-->
+        <!--<security:intercept-url pattern="/**" access="denyAll"/>-->
+        <!--<security:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER"/>-->
+        <!--<security:access-denied-handler ref="oauthAccessDeniedHandler" />-->
+    <!--</security:http>-->
+
+    <!--OAUTH2 CLIENT AUTHENTICATION-->
+    <bean id="clientCredentialsTokenEndpointFilter"
+          class="org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter">
+        <property name="authenticationManager" ref="clientAuthenticationManager" />
+    </bean>
+
+    <security:authentication-manager alias="clientAuthenticationManager">
+        <security:authentication-provider user-service-ref="clientDetailsUserService" />
+    </security:authentication-manager>
+
+    <bean id="clientDetailsUserService"
+          class="org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService">
+        <constructor-arg ref="clientDetails" />
+    </bean>
+
+    <bean id="clientDetails" class="bo.net.tigo.security.ClientDetailsServiceImpl">
+        <property name="clientId" value="${oauth2.clientId}" />
+        <property name="clientSecret" value="${oauth2.clientSecret}" />
+    </bean>
+
+    <bean id="clientAuthenticationEntryPoint"
+          class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint">
+        <property name="realmName" value="springsec/client" />
+        <property name="typeName" value="Basic" />
+    </bean>
+
+    <bean id="oauthAccessDeniedHandler"
+          class="org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler">
+    </bean>
+
+    <!--OAUTH2 USER AUTHENTICATION - PART2 TOKEN GENERATION-->
+    <oauth:authorization-server
+            client-details-service-ref="clientDetails" token-services-ref="tokenServices" >
+        <oauth:authorization-code/>
+        <oauth:implicit/>
+        <oauth:refresh-token/>
+        <oauth:client-credentials/>
+        <oauth:password authentication-manager-ref="userAuthenticationManager"/>
+    </oauth:authorization-server>
+
+    <security:authentication-manager id="userAuthenticationManager">
+        <security:authentication-provider>
+            <security:user-service>
+                <security:user name="admin" password="admin" authorities="ROLE_ADMIN"/>
+            </security:user-service>
+        </security:authentication-provider>
+        <security:authentication-provider ref="userAuthenticationProvider" />
+    </security:authentication-manager>
+
+    <bean id="userAuthenticationProvider"
+          class="bo.net.tigo.security.UserAuthenticationProvider">
+    </bean>
+
+    <bean id="tokenServices"
+          class="org.springframework.security.oauth2.provider.token.DefaultTokenServices">
+        <property name="tokenStore" ref="tokenStore" />
+        <property name="clientDetailsService" ref="clientDetails" />
+        <property name="supportRefreshToken" value="${oauth2.supportRefreshToken}" />
+        <property name="accessTokenValiditySeconds" value="${oauth2.accessTokenValiditySeconds}"></property>
+    </bean>
+
+    <bean id="tokenStore"
+          class="org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore"/>
+
+    <bean id="oauthAuthenticationEntryPoint"
+          class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint">
+    </bean>
+
+    <!--OAUTH2 USER AUTHENTICATION USING TOKEN - RESOURCE ACCESS-->
+    <oauth:resource-server id="resourceServerFilter"
+                           resource-id="springsec" token-services-ref="tokenServices" />
+    <!--Looout-->
+    <bean id="logoutSuccessHandler" class="bo.net.tigo.security.LogoutImpl" >
+        <property name="tokenstore" ref="tokenStore"></property>
+    </bean>
+
+    <!--ACTIVE DIRECTORY Authentication-->
+    <bean id="activeDirectoryLdapAuthenticationProvider" class="org.springframework.security.ldap.authentication.ad.ActiveDirectoryLdapAuthenticationProvider">
+        <constructor-arg value="${activeDirectory.domain}"/>
+        <constructor-arg value="${activeDirectory.url}"/>
+        <property name="useAuthenticationRequestCredentials" value="true" />
+        <property name="convertSubErrorCodesToExceptions" value="true"/>
+    </bean>
+
+    <!--Starting taskScheduler-->
+    <task:scheduled-tasks scheduler="luckyNumbersScheduler">
+        <!--Improve to start using trigger-->
+        <task:scheduled ref="getFrozenAndFreeNumbers" method="processScheduledAndReScheduledTasks" fixed-delay="${scheduler.fixedDelay}"/>
+        <task:scheduled ref="findAndSaveLuckyNumbers" method="processStartedPhase2Tasks" fixed-delay="${scheduler.fixedDelay}"/>
+    </task:scheduled-tasks>
+    <task:scheduler id="luckyNumbersScheduler" pool-size="10"/>
+
+    <!--FTP Server-->
+    <bean id="ftpSessionFactory" class="org.springframework.integration.ftp.session.DefaultFtpSessionFactory">
+        <property name="host" value="${ftp.host}"/>
+        <property name="port" value="${ftp.port}"/>
+        <property name="username" value="${ftp.user}"/>
+        <property name="password" value="${ftp.password}"/>
+        <property name="bufferSize" value="100000"/>
+    </bean>
+
+    <int-ftp:outbound-channel-adapter  id="ftpOutbound"
+                                       channel="ftpChannelOUT"
+                                       remote-directory="${ftp.path}/in"
+                                       session-factory="ftpSessionFactory"
+                                       use-temporary-file-name="true"
+                                       temporary-file-suffix=".writing"/>
+
+    <int:channel id="ftpChannelOUT"/>
+
+    <int-ftp:inbound-channel-adapter id="ftpInbound"
+            channel="ftpChannelIN"
+            session-factory="ftpSessionFactory"
+            charset="UTF-8"
+            auto-create-local-directory="true"
+            delete-remote-files="false"
+            filename-pattern="*.out"
+            remote-directory="${ftp.path}/out"
+            remote-file-separator="/"
+            preserve-timestamp="true"
+            temporary-file-suffix=".writing"
+            local-directory="${file.path.import.out}">
+        <int:poller max-messages-per-poll="-1" fixed-delay="${ftp.delay}"/>
+    </int-ftp:inbound-channel-adapter>
+
+    <int:channel id="ftpChannelIN">
+        <int:queue/>
+    </int:channel>
+
+    <int:service-activator input-channel="ftpChannelIN" ref="outFileProcessor" method="processOutFile">
+        <int:poller fixed-delay="${ftp.delay}"/>
+    </int:service-activator>
+
+    <!--web service configuration-->
+    <bean id="marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+        <property name="contextPath" value="bo.net.tigo.wsdl"/>
+    </bean>
+
+    <bean id="smsServiceClient" class="bo.net.tigo.service.SmsServiceClient">
+        <property name="defaultUri" value="http://wscrmdev.tigo.net.bo:8080/CommitEnvioSmsWSv2/EnvioSMS"/>
+        <property name="marshaller" ref="marshaller"/>
+        <property name="unmarshaller" ref="marshaller"/>
+    </bean>
+
+</beans>

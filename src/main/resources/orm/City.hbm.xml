@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="bo.net.tigo.model.City" table="ILN_CITY" schema="IMPORTLUCKY">
+        <id name="id" type="java.lang.Long">
+            <column name="ILN_CITY_ID"/>
+            <generator class="native">
+                <param name="sequence">ILN_CITY_SEQ_ID</param>
+            </generator>
+        </id>
+        <property name="code" type="java.lang.Integer">
+            <column name="ILN_CITY_CODE" not-null="true" unique="true"/>
+        </property>
+        <property name="name" type="java.lang.String">
+            <column name="ILN_CITY_NAME" not-null="true" unique="true"/>
+        </property>
+        <property name="description" type="java.lang.String">
+            <column name="ILN_CITY_DESCRIPTION"/>
+        </property>
+        <property name="enabled" type="java.lang.Boolean">
+            <column name="ILN_CITY_ENABLED" not-null="true"/>
+        </property>
+        <property name="createdDate" type="java.util.Date">
+            <column name="ILN_CITY_CREATED_DATE"/>
+        </property>
+        <property name="lastUpdate" type="java.util.Date">
+            <column name="ILN_CITY_LAST_UPDATE"/>
+        </property>
+    </class>
+</hibernate-mapping>

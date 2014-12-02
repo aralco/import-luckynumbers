@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="bo.net.tigo.model.AccessLog" table="ILN_ACCESS_LOG" schema="IMPORTLUCKY">
+        <id name="id" type="java.lang.Long">
+            <column name="ILN_ACCESS_LOG_ID"/>
+            <generator class="native">
+                <param name="sequence">ILN_ACCESS_LOG_SEQ_ID</param>
+            </generator>
+        </id>
+        <property name="timestamp" type="java.util.Date">
+            <column name="ILN_ACCESS_LOG_TIMESTAMP"/>
+        </property>
+        <property name="user" type="java.lang.String">
+            <column name="ILN_ACCESS_LOG_USER"/>
+        </property>
+        <property name="action" type="java.lang.String">
+            <column name="ILN_ACCESS_LOG_ACTION"/>
+        </property>
+        <property name="description" type="java.lang.String">
+            <column name="ILN_ACCESS_LOG_DESCRIPTION"/>
+        </property>
+    </class>
+</hibernate-mapping>

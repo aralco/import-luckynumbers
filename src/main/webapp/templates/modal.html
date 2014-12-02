@@ -1,0 +1,17 @@
+<button class="btn btn-wide btn-primary" ng-click="openModal()">Open modal</button>
+
+<modal open="isModalOpen">
+    <div class="modal-header">
+        <button type="button" class="close fui-cross" data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title">Confirmar</h4>
+    </div>
+
+    <div class="modal-body">
+        <p>Modal content = {{2 + 2}}</p>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-primary btn-wide" data-dismiss="modal">Aceptar</button>
+        <button class="btn btn-danger btn-wide" data-dismiss="modal">Cancelar</button>
+    </div>
+</modal>

@@ -1,0 +1,70 @@
+<div class="container">
+        <div class="demo-title">
+          <h3 class="demo-panel-title">Configuracion</h3>
+        </div>
+        <div class="demo-content">
+
+          <ul class="nav nav-tabs nav-append-content">
+            <li class="active"><a id="tab1" href="#">Usuarios</a></li>
+          </ul> <!-- /tabs -->
+
+          <div class="tab-content">
+            <div class="tab-pane active" id="tab1">
+              <div class="dialog demo-dialog">
+                      <div id="login" class="form-action show">
+                          <h4>Administracion de usuarios</h4>
+
+                          <div class="alert alert-danger" ng-show="authenticationError">
+                              <strong>Error al verificar sus datos! </strong>{{errorMessage}}.
+                          </div>
+                          <p>
+                              Los usarios deben coincidir con los de Active Directory
+                          </p>
+                          <form class="form-inline" role="form">
+                              <div class="form-group">
+                              <label class="sr-only" for="username">Nombre</label>
+                                  <input type="text" class="form-control flat" id="username" placeholder="Nombre" ng-model="username">
+                              </div>
+                              <br>
+                              <br>
+                              <div class="form-group">
+                                  <label class="sr-only" for="password">Login</label>
+                                  <input type="password" class="form-control flat" id="password" placeholder="Login" ng-model="password">
+                              </div>
+                              <br>
+                              <br>
+                              <button type="submit" class="btn btn-primary btn-wide" ng-click="login()">Agregar</button>
+                              <hr>
+                          </form>
+                      </div>
+                  </div>
+
+                  <div class="table-responsive">
+                              <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Login</th>
+                                    <th>ROL</th>
+                                    <th>Habilitado</th>
+                                  </tr>
+                                </thead>
+
+                                <tr ng-repeat="usuario in usuarios">
+                                <td>{{usuario.name}}</td>
+                                <td>{{usuario.username}}</td>
+                                <td>{{usuario.role}}</td>
+                                <td>{{usuario.enabled}}</td>
+                                </tr>
+                                <tbody>
+                                  <tr>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+            </div>
+
+          </div> <!-- /tab-content -->
+
+        </div>
+      </div> <!-- /row -->

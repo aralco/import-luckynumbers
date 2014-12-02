@@ -1,0 +1,26 @@
+<div class="container">
+    <div class="dialog demo-dialog">
+        <div id="login" class="form-action show">
+            <h4>Importacion de LuckyNumbers</h4>
+
+            <div class="alert alert-danger" ng-show="authenticationError">
+                <strong>Error al verificar sus datos! </strong>{{errorMessage}}.
+            </div>
+            <p>
+                Por favor ingrese al sistema con sus credenciales
+            </p>
+            <form class="form-inline" role="form">
+                <div class="form-group">
+                <label class="sr-only" for="username">Usuario</label>
+                    <input type="text" class="form-control flat" id="username" placeholder="Usuario" ng-model="username">
+                </div>
+                <div class="form-group">
+                    <label class="sr-only" for="password">Password</label>
+                    <input type="password" class="form-control flat" id="password" placeholder="Password" ng-model="password">
+                </div>
+                <button type="submit" class="btn btn-primary btn-wide" ng-click="login()">Ingresar</button>
+                <hr>
+            </form>
+        </div>
+    </div>
+</div>

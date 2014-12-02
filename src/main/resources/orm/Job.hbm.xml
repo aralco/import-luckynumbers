@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="bo.net.tigo.model.Job" table="ILN_JOB" schema="IMPORTLUCKY">
+        <id name="id" type="java.lang.Long">
+            <column name="ILN_JOB_ID"/>
+            <generator class="native">
+                <param name="sequence">ILN_JOB_SEQ_ID</param>
+            </generator>
+        </id>
+        <property name="name" type="java.lang.String">
+            <column name="ILN_JOB_NAME"/>
+        </property>
+        <property name="description" type="java.lang.String">
+            <column name="ILN_JOB_DESCRIPTION"/>
+        </property>
+        <property name="scheduledDate" type="java.util.Date">
+            <column name="ILN_JOB_SCHEDULED_DATE"/>
+        </property>
+        <property name="now" type="java.lang.Boolean">
+            <column name="ILN_JOB_NOW"/>
+        </property>
+        <property name="state" type="java.lang.String">
+            <column name="ILN_JOB_STATE"/>
+        </property>
+        <property name="owner" type="java.lang.String">
+            <column name="ILN_JOB_OWNER"/>
+        </property>
+        <property name="totalTasks" type="java.lang.Integer">
+            <column name="ILN_JOB_TOTAL_TASKS"/>
+        </property>
+        <property name="passedTasks" type="java.lang.Integer">
+            <column name="ILN_JOB_PASSED_TASKS"/>
+        </property>
+        <property name="failedTasks" type="java.lang.Integer">
+            <column name="ILN_JOB_FAILED_TASKS"/>
+        </property>
+        <property name="totalCoverage" type="java.lang.String">
+            <column name="ILN_JOB_TOTAL_COVERAGE"/>
+        </property>
+        <property name="lnNumbersInBccs" type="java.lang.Long">
+            <column name="ILN_JOB_LN_IN_BCCS"/>
+        </property>
+        <property name="reservedLuckyNumbers" type="java.lang.Long">
+            <column name="ILN_JOB_RESERVED_LUCKY_NUMBERS"/>
+        </property>
+        <property name="rolledBackNumbers" type="java.lang.Long">
+            <column name="ILN_JOB_ROLLEDBACK_NUMBERS"/>
+        </property>
+        <property name="unlockedNumbers" type="java.lang.Long">
+            <column name="ILN_JOB_UNLOCKED_NUMBERS"/>
+        </property>
+        <property name="lcNumbersInBccs" type="java.lang.Long">
+            <column name="ILN_JOB_LC_NUMBERS_IN_BCCS"/>
+        </property>
+        <property name="summary" type="java.lang.String">
+            <column name="ILN_JOB_SUMMARY" sql-type="clob"/>
+        </property>
+        <property name="createdDate" type="java.util.Date">
+            <column name="ILN_JOB_CREATED_DATE"/>
+        </property>
+        <property name="lastUpdate" type="java.util.Date">
+            <column name="ILN_JOB_LAST_UPDATE"/>
+        </property>
+
+        <set name="tasks" table="TASK" inverse="true" cascade="all" lazy="false" fetch="join">
+            <key>
+                <column name="ILN_JOB_ID" not-null="true"/>
+            </key>
+            <one-to-many class="bo.net.tigo.model.Task"/>
+        </set>
+    </class>
+</hibernate-mapping>

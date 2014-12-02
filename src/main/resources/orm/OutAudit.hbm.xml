@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="bo.net.tigo.model.OutAudit" table="ILN_OUT_AUDIT" schema="IMPORTLUCKY">
+        <id name="id" type="java.lang.Long">
+            <column name="ILN_OUT_AUDIT_ID"/>
+            <generator class="native">
+                <param name="sequence">ILN_OUT_AUDIT_SEQ_ID</param>
+            </generator>
+        </id>
+        <property name="row" type="java.lang.String">
+            <column name="ILN_OUT_AUDIT_ROW"/>
+        </property>
+        <property name="number" type="java.lang.String">
+            <column name="ILN_OUT_AUDIT_NUMBER"/>
+        </property>
+        <property name="luckyReserved" type="java.lang.Boolean">
+            <column name="ILN_OUT_AUDIT_LUCKY_RESERVED"/>
+        </property>
+        <property name="codePassed" type="java.lang.Integer">
+            <column name="ILN_OUT_AUDIT_CODE_PASSED"/>
+        </property>
+        <property name="codeFailed" type="java.lang.String">
+            <column name="ILN_OUT_AUDIT_CODE_FAILED"/>
+        </property>
+        <property name="message" type="java.lang.String">
+            <column name="ILN_OUT_AUDIT_MESSAGE"/>
+        </property>
+        <property name="fileName" type="java.lang.String">
+            <column name="ILN_OUT_AUDIT_FILENAME"/>
+        </property>
+        <property name="taskId" type="java.lang.Long">
+            <column name="ILN_OUT_AUDIT_TASKID"/>
+        </property>
+        <property name="jobId" type="java.lang.Long">
+            <column name="ILN_OUT_AUDIT_JOBID"/>
+        </property>
+        <property name="createdDate" type="java.util.Date">
+            <column name="ILN_OUT_AUDIT_CREATED_DATE"/>
+        </property>
+        <property name="lastUpdate" type="java.util.Date">
+            <column name="ILN_OUT_AUDIT_LAST_UPDATE"/>
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,65 @@
+<h3>Ciudades</h3>
+<style>
+    #mydiv {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1000;
+        background-color: grey;
+        opacity: .8;
+    }
+
+</style>
+<div data-ng-app data-ng-controller="CiudadesController" class="container">
+    <div class="alert alert-danger" ng-show="formError">
+                        <strong>Error! </strong>{{errorMessage}}.
+                    </div>
+
+
+    <p data-ng-hide="addMode"><a data-ng-click="toggleAdd()" href="javascript:;" class="btn btn-primary">Agregar nueva ciudad</a></p>
+    <form name="addCity" data-ng-show="addMode" style="width:600px;margin:0px auto;">
+    <div class="dialog dialog-success">
+        <label>Código:</label><input type="text" data-ng-model="newCity.code" required /><br /><br>
+        <label>Nombre:</label><input type="text" data-ng-model="newCity.name" required /><br /><br>
+        <label>Descripción:</label><input type="text" data-ng-model="newCity.description" required /><br /><br>
+        <label>Habilitada:</label><input type="checkbox" ng-model="newCity.enabled" required /><br /><br>
+        <br />
+        <br />
+        <input type="submit" value="Agregar" data-ng-click="add()" data-ng-disabled="!addCity.$valid" class="btn btn-primary" />
+        <input type="button" value="Cancelar" data-ng-click="toggleAdd()" class="btn btn-primary" />
+        <br /><br />
+    </div>
+    </form>
+    <table class="table table-bordered table-hover" style="width:800px">
+        <tr>
+            <td>Codigo</td>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Habilitada</th>
+        </tr>
+
+        <tr data-ng-repeat="newCity in ciudades">
+            <td>
+                <p data-ng-hide="editMode">{{ newCity.code }}</p>
+                <input data-ng-show="editMode" type="text" data-ng-model="newCity.code" />
+            </td>
+            <td>
+                <p data-ng-hide="editMode">{{ newCity.name }}</p>
+                <input data-ng-show="editMode" type="text" data-ng-model="newCity.name" />
+            </td>
+            <td>
+                <p data-ng-hide="editMode">{{ newCity.description }}</p>
+                <input data-ng-show="editMode" type="text" data-ng-model="newCity.description" />
+            </td>
+            <td>
+                <p data-ng-hide="editMode">{{ newCity.enabled }}</p>
+                <label data-ng-show="editMode">Habilitada:</label><input data-ng-show="editMode" type="checkbox" ng-model="newCity.enabled" required />
+            </td>
+            
+        </tr>
+    </table>
+    <hr />
+
+</div>

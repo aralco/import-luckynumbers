@@ -1,0 +1,144 @@
+
+<div class="container">
+    <div class="dialog demo-dialog">
+        <div id="login" class="form-action show">
+            <h4>Crear nueva programación</h4>
+
+            <div class="alert alert-danger" ng-show="formError">
+                Error al procesar los datos <span class="text-primary">{{errorMessage}}</span>
+            </div>
+            <p>
+                Por favor ingrese al sistema los datos y fecha de la programación
+            </p>
+            <form class="form-inline" role="form" name="myForm">
+               <div class="form-group">
+                  <label class="sr-only" for="dialogName">Nombre/Descripción</label>
+                  <input type="text" class="form-control flat" id="dialogName" name="name" ng-model="new.nombre" placeholder="Nombre/Descripción requerido" required>
+              </div>
+              <br>
+              <br>
+              <div class="form-group" ng-show="dateNow">
+                  <div class="dropdown">
+                      <a class="dropdown-toggle" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="">
+                          Seleccionar fecha de inicio
+                      </a>
+                      <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                          <datetimepicker data-ng-model="new.date"
+                          data-datetimepicker-config="{ dropdownSelector: '.dropdown-toggle'}" ng-required="true"></datetimepicker>
+                      </ul>
+                  </div>
+                  <p>Fecha Seleccionada: {{ new.date | date:'medium' }}</p>
+              </div>
+              <br>
+              <br>
+              <label class="checkbox" for="checkbox1" ng-click="changeClick();">
+                <input type="checkbox" id="checkbox1" data-toggle="checkbox" ng-click="changeClick();"value="{{inmediato}}">
+                .......Ejecutar inmediatamente
+            </label>
+
+            <br>
+            <br>
+            <button class="btn btn-primary btn-wide" ng-click="newJobFn()">Enviar</button>
+            <button class="btn btn-danger btn-wide" ng-click="cancelarFn()">Cancelar</button>
+            <input type="hidden" name="description" ng-model="new.descripcion" value="">
+        </form>
+    </div>
+</div>
+
+<div class="dialog dialog-success">
+  Tareas Asociadas
+  <button class="btn btn-primary btn-wide mll" ng-click="createTask();">
+    <span class="fui-plus"></span>
+    Nueva Tarea
+</button>
+</div> <!-- /dialog -->
+
+<div class="table-responsive">
+  <table class="table table-bordered">
+     <thead>
+       <tr>
+         <th>Tipo</th>
+         <th>Sucursal</th>
+         <th>Rango Desde</th>
+         <th>Rango Hasta</th>
+     </tr>
+ </thead>
+ <tbody>
+   <tr ng-repeat="tarea in tareas">
+         <td>{{tarea.type}}</td>
+         <td>{{friendlyCities[tarea.city]}}</td>
+         <td>{{tarea.from}}</td>
+         <td>{{tarea.to}}</td>
+   </tr>
+</tbody>
+</table>
+</div>
+
+</div>
+
+
+
+<modal open="isModalOpen">
+    <div class="modal-header">
+        <button type="button" class="close fui-cross" data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title">{{modal.title}}</h4>
+    </div>
+
+    <div class="modal-body">
+
+     <p>{{modal.message}}</p>
+
+     <!-- ********************** -->
+
+    <!-- ********************** -->
+
+    <!-- ********************** -->
+    <div ng-show="modal.showCTask">
+        <div class="dialog demo-dialog">
+            <div id="newTaskN" class="form-action show">
+
+                <div class="alert alert-danger" ng-show="formError">
+                    <strong>Error! </strong>{{errorMessage}}.
+                </div>
+
+                <form class="form-inline" role="form">
+                    <div class="form-group">
+                        <label class="sr-only" for="username">Desde</label>
+                        <input type="text" class="form-control flat" id="desde" placeholder="DesdeN" ng-model="modal.desde" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="sr-only" for="hasta">Hasta</label>
+                        <input type="text" class="form-control flat" id="hasta" placeholder="HastaN" ng-model="modal.hasta" required>
+                    </div>
+                    <br>
+                    <br>
+
+                    <div class="mbl">
+                        <select name="large" class="select-block" ng-model="modal.ciudad">
+                          <option ng-repeat="ciudad in ciudades" value="{{ciudad.code}}">{{ciudad.name}}</option>
+                      </select>
+                  </div>
+
+                  <br>
+                  <br>
+                  <div class="form-group">
+                   <div class="btn-toolbar">
+                       <div class="btn-group">
+                            <input type="radio" ng-model="modal.tipoNumeros" value="FROZEN">  Congelados <br/>
+                            <input type="radio" ng-model="modal.tipoNumeros" value="FREE"> Libres <br/>
+                     </div>
+                 </div>
+             </div>
+
+         </form>
+     </div>
+ </div>
+
+</div>
+
+
+<div class="modal-footer">
+    <button class="btn btn-primary btn-wide" data-dismiss="modal" ng-click="funcionBorrar();">{{modal.button1}}</button>
+    <button class="btn btn-danger btn-wide" data-dismiss="modal">{{modal.button2}}</button>
+</div>
+</modal>

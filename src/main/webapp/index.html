@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es" ng-app="luckynumbersApp">
+  <head>
+    <meta charset="utf-8">
+    <title>Provisionamiento de Lucky Numbers</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Loading Bootstrap -->
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+
+
+    <!-- Loading Flat UI -->
+    <link rel="stylesheet" href="bower_components/angular-bootstrap-datetimepicker/src/css/datetimepicker.css"/>
+    <link href="css/flat-ui.css" rel="stylesheet">
+    <link href="css/demo.css" rel="stylesheet">
+    <link href='css/loading-bar.css' rel='stylesheet' />
+
+    <link rel="shortcut icon" href="images/favicon.ico">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.js"></script>
+      <script src="js/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body id="ng-app" ng-app="luckynumbersApp">
+    <nav class="navbar navbar-default" role="navigation" ng-controller="MenuController">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-01">
+            <span class="sr-only">Provisionamiento de Lucky Numbers</span>
+        </button>
+
+        <div class="navbar-brand"><div class="btn-group">
+                      <button class="btn btn-sm btn-primary mlm fui-user" data-toggle="dropdown">
+                      <span class="caret"></span>
+                      </button>
+                      <span class="dropdown-arrow dropdown-arrow-inverse"></span>
+
+                      <ul class="dropdown-menu dropdown-inverse">
+                        <li><a href="#logout">Cerrar sesion</a></li>
+                      </ul>
+      </div></div>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-collapse-01">
+        <ul class="nav navbar-nav">
+            <li ng-class="{active: $routeSegment.name === 'mprogramaciones'}"><a href="#mprogramaciones">Mis Programaciones</a></li>
+            <li ng-class="{active: $routeSegment.startsWith('nprogramacion')}"><a href="#nprogramacion">Nueva Programacion</a></li>
+
+            <li class="dropdown">
+                                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">Configuraciones y parámetros <b class="caret"></b></a>
+                                        <span class="dropdown-arrow"></span>
+                                        <ul class="dropdown-menu">
+                                          <li><a href="#usuarios">Usuarios</a></li>
+                              <li><a href="#contactos">Contactos</a></li>
+                              <li><a href="#ciudades">Ciudades</a></li>
+                                        </ul>
+                                      </li>
+        </ul>
+    </div>
+    <!-- /.navbar-collapse -->
+</nav>
+ <div class="container-fluid" app-view-segment="0">
+</div>
+
+
+    <!-- Load JS here for greater good =============================-->
+    <script src="js/jquery-1.8.3.min.js"></script>
+    <script src="js/jquery-ui-1.10.3.custom.min.js"></script>
+    <script src="js/jquery.ui.touch-punch.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-select.js"></script>
+    <script src="js/bootstrap-switch.js"></script>
+    <script src="js/flatui-checkbox.js"></script>
+    <script src="js/flatui-radio.js"></script>
+    <script src="js/jquery.tagsinput.js"></script>
+    <script src="js/jquery.placeholder.js"></script>
+
+    <script type="text/javascript" src="bower_components/moment/moment.js"></script>
+
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/angular-route-segment/build/angular-route-segment.js"></script>
+    <script src="bower_components/angular-http-auth-master/src/http-auth-interceptor.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+    <script type="text/javascript" src="bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.js"></script>
+    <script src="js/loading-bar.js"></script>
+
+    <script src="utils.js"></script>
+    <script src="app.js"></script>
+    <script src="constants.js"></script>
+    <script src="controllers/misprogramaciones_controller.js"></script>
+    <script src="controllers/session_controller.js"></script>
+    <script src="controllers/menu_controller.js"></script>
+    <script src="controllers/nuevaprogramacion_controller.js"></script>
+    <script src="controllers/config_controller.js"></script>
+    <script src="controllers/UsuariosController.js"></script>
+    <script src="controllers/ContactosController.js"></script>
+    <script src="controllers/CiudadesController.js"></script>
+    <script src="controllers/directives_controller.js"></script>
+    <script src="services.js"></script>
+
+     <script src="directives/main_directive.js"></script>
+    <script src="directives/modal_directive.js"></script>
+  </body>
+</html>

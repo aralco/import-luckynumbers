@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="bo.net.tigo.model.User" table="ILN_USER" schema="IMPORTLUCKY">
+        <id name="id" type="java.lang.Long">
+            <column name="ILN_USER_ID"/>
+            <generator class="native">
+                <param name="sequence">ILN_USER_SEQ_ID</param>
+            </generator>
+        </id>
+        <property name="name" type="java.lang.String">
+            <column name="ILN_USER_NAME"/>
+        </property>
+        <property name="email1" type="java.lang.String">
+            <column name="ILN_USER_EMAIL1"/>
+        </property>
+        <property name="email2" type="java.lang.String">
+            <column name="ILN_USER_EMAIL2"/>
+        </property>
+        <property name="phone1" type="java.lang.String">
+            <column name="ILN_USER_PHONE1"/>
+        </property>
+        <property name="phone2" type="java.lang.String">
+            <column name="ILN_USER_PHONE2"/>
+        </property>
+        <property name="phone3" type="java.lang.String">
+            <column name="ILN_USER_PHONE3"/>
+        </property>
+        <property name="description" type="java.lang.String">
+            <column name="ILN_USER_DESCRIPTION"/>
+        </property>
+        <property name="createdDate" type="java.util.Date">
+            <column name="ILN_USER_CREATED_DATE"/>
+        </property>
+        <property name="lastUpdate" type="java.util.Date">
+            <column name="ILN_USER_LAST_UPDATE"/>
+        </property>
+        <property name="enabled" type="java.lang.Boolean">
+            <column name="ILN_USER_ENABLED" not-null="true"/>
+        </property>
+        <property name="username" type="java.lang.String">
+            <column name="ILN_USER_USERNAME" not-null="true" unique="true"/>
+        </property>
+        <property name="role" type="java.lang.String">
+            <column name="ILN_USER_ROLE" not-null="true"/>
+        </property>
+    </class>
+</hibernate-mapping>
