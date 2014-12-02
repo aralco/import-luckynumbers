@@ -239,7 +239,7 @@ luckynumbersApp.controller('MisProgramacionesController', function ($scope, $fil
             $scope.modal.updateDate = programa.scheduledDate;
             $scope.jobActivoId = programa.id;
             $scope.jobActivoRecord = programa;
-             $scope.modal.modalError = false;
+            $scope.modal.modalError = false;
             $scope.funcionBorrar = $scope.modifyDateByID;
           }
 

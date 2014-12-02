@@ -17,12 +17,12 @@
 
     <p data-ng-hide="addMode"><a data-ng-click="toggleAdd()" href="javascript:;" class="btn btn-primary">Agregar nuevo contacto</a></p>
     <form name="addContact" data-ng-show="addMode" style="width:600px;margin:0px auto;">
-    <div class="dialog dialog-success">
-        <label>Nombre completo:</label><input type="text" data-ng-model="newContact.name" required />                
-        <label>Descripcion:</label><input type="text" data-ng-model="newContact.description" required />
-        <label>E-mail:</label><input type="text" data-ng-model="newContact.email1" required />        
-        <label>Teléfono:</label><input type="text" data-ng-model="newContact.phone1" required />        
-        <label>Habilitado:</label><input type="checkbox" ng-model="newContact.enabled" required />
+    <div class="dialog dialog-success" style="text-align:left;padding:15px;">
+        <label>Nombre completo:</label><input type="text" data-ng-model="newContact.name" required /><br>
+        <label>Descripcion:</label><input type="text" data-ng-model="newContact.description" required /><br>
+        <label>E-mail:</label><input type="text" data-ng-model="newContact.email1" required /><br>
+        <label>Teléfono:</label><input type="text" data-ng-model="newContact.phone1" required /><br>
+        <label>Habilitado:</label><input type="checkbox" ng-model="newContact.enabled" required /><br>
         <br />
         <br />
         <input type="submit" value="Agregar" data-ng-click="add()" data-ng-disabled="!addContact.$valid" class="btn btn-primary" />
