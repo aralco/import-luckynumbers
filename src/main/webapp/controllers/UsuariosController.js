@@ -13,6 +13,11 @@ luckynumbersApp.controller('UsuariosController', function ($scope, $filter, GetC
 	   $scope.loading = false;
 	 });
 
+	$scope.roles = [
+	     {name:'Administrador', value:'ROLE_ADMIN'},
+	     {name:'Parametrizador', value:'ROLE_USER'}
+	   ];
+
 	$scope.toggleEdit = function (usuario) {
 	        $scope.ElUsuario = !$scope.ElUsuario; 
 	    };  

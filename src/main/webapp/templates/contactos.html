@@ -20,7 +20,7 @@
     <div class="dialog dialog-success" style="text-align:left;padding:15px;">
         <label>Nombre completo:</label><input type="text" data-ng-model="newContact.name" required /><br>
         <label>Descripcion:</label><input type="text" data-ng-model="newContact.description" required /><br>
-        <label>E-mail:</label><input type="text" data-ng-model="newContact.email1" required /><br>
+        <label>E-mail:</label><input type="email" data-ng-model="newContact.email1" required /><br>
         <label>Teléfono:</label><input type="text" data-ng-model="newContact.phone1" required /><br>
         <label>Habilitado:</label><input type="checkbox" ng-model="newContact.enabled" required /><br>
         <br />
@@ -52,15 +52,15 @@
             </td>
             <td>
                 <p data-ng-hide="editMode">{{ newContact.email1 }}</p>
-                <input data-ng-show="editMode" type="text" data-ng-model="newContact.email1" />
+                <input data-ng-show="editMode" type="email" data-ng-model="newContact.email1" />
             </td>
             <td>
                 <p data-ng-hide="editMode">{{ newContact.phone1 }}</p>
                 <input data-ng-show="editMode" type="text" data-ng-model="newContact.phone1" />
             </td>
             <td>
-                <p data-ng-hide="editMode">{{ newContact.enabled }}</p>
-                <input data-ng-show="editMode" type="text" data-ng-model="newContact.enabled" />
+               <p data-ng-hide="editMode">{{ newContact.enabled }}</p>  
+                <label data-ng-show="editMode">Habilitado:</label><input data-ng-show="editMode" type="checkbox" ng-model="newContact.enabled" required />
             </td>
             <td>
                 <p data-ng-hide="editMode"><a href="javascript:;" class="btn btn-sm btn-primary" data-ng-click="toggleEdit()"><span class="fui-new"></span>&nbsp;&nbsp;Editar</a></p>

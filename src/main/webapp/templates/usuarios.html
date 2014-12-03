@@ -21,9 +21,9 @@
      <div class="dialog dialog-success">
         <label>Nombre completo:</label><input type="text" data-ng-model="newUser.name" required />  <br />
         <label>Nombre (login):</label><input type="text" data-ng-model="newUser.username" required />  <br />
-        <label>Rol:</label><input type="text" data-ng-model="newUser.role" required />  <br />
+        <label>Rol:</label><select ng-model="newUser.role" ng-options="role.value as role.name for role in roles"></select><br />
         <label>Descripcion:</label><input type="text" data-ng-model="newUser.description" required />  <br />
-        <label>E-mail:</label><input type="text" data-ng-model="newUser.email1" required />  <br />
+        <label>E-mail:</label><input type="email" data-ng-model="newUser.email1" required />  <br />
         <label>Teléfono:</label><input type="text" data-ng-model="newUser.phone1" required />  <br />
         <label>Habilitado:</label><input type="checkbox" ng-model="newUser.enabled" required />  <br />
         <br />
@@ -57,8 +57,8 @@
                 <input data-ng-show="ElUsuario" type="text" data-ng-model="newUser.username" />  
             </td>  
             <td>  
-                <p data-ng-hide="ElUsuario">{{ newUser.role }}</p>  
-                <input data-ng-show="ElUsuario" type="text" data-ng-model="newUser.role" />  
+                <p data-ng-hide="ElUsuario">{{ newUser.role }}</p>
+                <select data-ng-show="ElUsuario" ng-model="newUser.role" ng-options="role.value as role.name for role in roles"></select>
             </td>  
             <td>  
                 <p data-ng-hide="ElUsuario">{{ newUser.description }}</p>  
