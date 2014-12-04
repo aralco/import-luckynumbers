@@ -393,12 +393,12 @@ luckynumbersApp.controller('MisProgramacionesController', function ($scope, $fil
           if (inIs == "In") {
           GetTaskFileIn.get(params, function(data) {
              //$scope.modal.jobSummary = data.toString();
-             $scope.modal.jobSummary = data.toString().split(",").join("\n");
+             $scope.modal.jobSummary = data.join("\n");
            });
           } else {
             GetTaskFileOut.get(params, function(data) {
                //$scope.modal.jobSummary = data.toString();
-               $scope.modal.jobSummary = data.toString().split(",").join("\n");
+               $scope.modal.jobSummary = data.join("\n");
              });
           }
           $scope.funcionBorrar = null;
