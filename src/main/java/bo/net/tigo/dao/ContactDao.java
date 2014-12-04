@@ -12,5 +12,6 @@ public interface ContactDao {
     public void update(Contact contact);
     public Contact findOne(Long contactId);
     public List<Contact> findAll();
+    public List<Contact> findEnabled(boolean enabled);
 
 }

@@ -41,4 +41,15 @@ public class ContactDaoImpl implements ContactDao {
         Session session = sessionFactory.getCurrentSession();
         return session.createQuery("from Contact").list();
     }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Contact> findEnabled(boolean enabled) {
+        Session session = sessionFactory.getCurrentSession();
+        return session.createQuery("from Contact contact "+
+                                   "where contact.enabled = :enabled")
+                                    .setParameter("enabled",enabled)
+                                    .list();
+    }
+
 }

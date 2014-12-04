@@ -28,7 +28,7 @@ public class FindAndSaveLuckyNumbers {
     @Autowired
     private LuckyNumbersDao luckyNumbersDao;
     @Autowired
-    private SmsServiceClient smsServiceClient;
+    private NotificationService notificationService;
 
     private static final Logger logger = LoggerFactory.getLogger(FindAndSaveLuckyNumbers.class);
 
@@ -163,12 +163,12 @@ public class FindAndSaveLuckyNumbers {
                 if(job.getTotalTasks().equals(job.getPassedTasks()))    {
                     job.setState(State.DONE.name());
                     job.setTotalCoverage(taskPercentage+"%");
-                smsServiceClient.sendSmsNotification("77960969", "La programación "+job.getName()+" ha finalizado correctamente.");
+                    notificationService.sendNotification(job.getOwner(), job.getName(), State.DONE);
                 //job is completed with errors
                 } else if(job.getTotalTasks().equals(job.getPassedTasks()+job.getFailedTasks())) {
                     job.setState(State.CRITERIA_ACCEPTANCE.name());
                     job.setTotalCoverage(taskPercentage+"%");
-                smsServiceClient.sendSmsNotification("77960969", "La programación "+job.getName()+" ha finalizado con errores.");
+                    notificationService.sendNotification(job.getOwner(), job.getName(), State.CRITERIA_ACCEPTANCE);
                 } else  {
                     job.setTotalCoverage("90%");
                     logger.info("Job is not yet completed progress:" + job.getTotalCoverage());
