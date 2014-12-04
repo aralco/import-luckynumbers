@@ -5,28 +5,45 @@ import bo.net.tigo.wsdl.EnviarSmsResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
-import org.springframework.ws.soap.client.core.SoapActionCallback;
+
+import javax.xml.bind.JAXBElement;
 
 /**
  * Created by aralco on 11/27/14.
  */
 public class SmsServiceClient extends WebServiceGatewaySupport {
     private static final Logger logger = LoggerFactory.getLogger(SmsServiceClient.class);
+    private int senderShort;
 
-    public void sendSmsNotification(String phone, int senderShort, String message)    {
-        EnviarSms request = new EnviarSms();
-        request.setNumeroTelefono(phone);
-        request.setCorto(senderShort);
-        request.setMensaje(message);
-        logger.info("SMS request:" + request.toString());
-        EnviarSmsResponse response = (EnviarSmsResponse)getWebServiceTemplate().marshalSendAndReceive(
-                request,
-                new SoapActionCallback("http://wscrmdev.tigo.net.bo:8080/CommitEnvioSmsWSv2/EnvioSMS")
-        );
-        if(response==null)  {
-            logger.warn("No response from sms web service.");
-        } else {
-            logger.info("SMS response:"+response.getReturn().getGeneralResponse().toString());
+    public void sendSmsNotification(String phone, String message)    {
+        try {
+            EnviarSms request = new EnviarSms();
+            request.setNumeroTelefono(phone);
+            request.setCorto(senderShort);
+            request.setMensaje(message);
+            logger.info("SMS request:" + request.toString());
+            JAXBElement response = (JAXBElement)getWebServiceTemplate().marshalSendAndReceive(request);
+            if(response==null)  {
+                logger.warn("No response received from sms web service.");
+            } else {
+                if(response.getValue() instanceof EnviarSmsResponse) {
+                    EnviarSmsResponse enviarSmsResponse = (EnviarSmsResponse)response.getValue();
+                    if(enviarSmsResponse.getReturn().getGeneralResponse().getStatus().equals("OK")){
+                        logger.info("SMS has been succesfully sent to "+phone+", with message from sms service: "
+                                +enviarSmsResponse.getReturn().getGeneralResponse().getMessage());
+                    } else  {
+                        logger.warn("SMS could not been sent to "+phone+", with message from sms service: "
+                                +enviarSmsResponse.getReturn().getGeneralResponse().getMessage());
+                    }
+                }
+            }
+
+        }catch(Exception e)    {
+            logger.warn("Could not send SMS notification.");
         }
+    }
+
+    public void setSenderShort(int senderShort) {
+        this.senderShort = senderShort;
     }
 }

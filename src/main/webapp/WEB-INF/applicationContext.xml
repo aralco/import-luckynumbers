@@ -29,7 +29,7 @@
     <mvc:annotation-driven />
     <mvc:default-servlet-handler />
     <context:annotation-config/>
-    <context:property-placeholder location="classpath:luckynumbers.properties"/>
+    <context:property-placeholder location="classpath:import-luckynumbers.properties"/>
     <security:global-method-security secured-annotations="enabled" />
 
     <!--############### PERSISTENCE ###############-->
@@ -282,9 +282,10 @@
     </bean>
 
     <bean id="smsServiceClient" class="bo.net.tigo.service.SmsServiceClient">
-        <property name="defaultUri" value="http://wscrmdev.tigo.net.bo:8080/CommitEnvioSmsWSv2/EnvioSMS"/>
+        <property name="defaultUri" value="${tigo.soap.webservice.sms.uri}"/>
         <property name="marshaller" ref="marshaller"/>
         <property name="unmarshaller" ref="marshaller"/>
+        <property name="senderShort" value="${tigo.soap.webservice.sms.short}"/>
     </bean>
 
 </beans>

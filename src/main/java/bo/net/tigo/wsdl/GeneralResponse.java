@@ -8,9 +8,7 @@
 
 package bo.net.tigo.wsdl;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 
 
 /**
@@ -42,11 +40,16 @@ import javax.xml.bind.annotation.XmlType;
     "status",
     "type"
 })
+@XmlRootElement(name = "generalResponse")
 public class GeneralResponse {
 
+    @XmlElement(name = "code")
     protected String code;
+    @XmlElement(name = "message")
     protected String message;
+    @XmlElement(name = "status")
     protected String status;
+    @XmlElement(name = "type")
     protected String type;
 
     /**

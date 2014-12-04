@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -22,27 +23,31 @@ import java.util.Map;
 public class LuckyNumbersDao {
 
     private static final Logger logger = LoggerFactory.getLogger(LuckyNumbersDao.class);
+    public static final String NUMERO = "NUMERO";
+    public static final String RESERVE_BCCS = "RESERVE_BCCS";
 
     private SimpleJdbcCall unReserveNumberProc;
+    @Value("${storedprocedure.luckynumber.unreservenumber.name}")
+    private String unReserveNumberProcName;
 
     @Autowired
     public void setDataSource(@Qualifier("lnOracleDataSource") DataSource dataSource) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcTemplate.setResultsMapCaseInsensitive(true);
         this.unReserveNumberProc = new SimpleJdbcCall(jdbcTemplate)
-                .withProcedureName("CONCILI_RESERVE_LUCKY_BCCS")
+                .withProcedureName(unReserveNumberProcName)
                 .withoutProcedureColumnMetaDataAccess()
                 .declareParameters(
-                        new SqlParameter("NUMERO", Types.VARCHAR),
-                        new SqlParameter("RESERVE_BCCS", Types.VARCHAR)
+                        new SqlParameter(NUMERO, Types.VARCHAR),
+                        new SqlParameter(RESERVE_BCCS, Types.VARCHAR)
                 );
 
     }
 
     public String unReserveNumber(String number, Boolean reserve)    {
         SqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("NUMERO", number)
-                .addValue("RESERVE_BCCS", String.valueOf(reserve));
+                .addValue(NUMERO, number)
+                .addValue(RESERVE_BCCS, String.valueOf(reserve));
         logger.info("unReserveNumber::"+number+","+reserve);
         Map result = unReserveNumberProc.execute(parameterSource);
         return (result!=null?"Rollback successful.":"Rollback failed.");

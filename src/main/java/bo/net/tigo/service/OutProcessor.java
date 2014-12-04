@@ -126,7 +126,7 @@ public class OutProcessor {
             //CONCILIATION of LuckyNumbers: Call BCCS to ask for LN numbers only if there are lucky numbers
             if(reservedLuckyNumbers>0)  {
                 logger.info("Conciliation of LuckyNumbers: Calling BCCS:SP1_LNROSLNXSUCURSALNRODESDEHASTA to ask for LN numbers using values:city="+task.getCity()+",from="+task.getFrom()+",to="+task.getTo());
-                List<InAudit> lnNumbers = bccsDao.getLnNumbers(task.getCity(),task.getFrom(),task.getTo());
+                List<InAudit> lnNumbers = bccsDao.getReservedNumbers(task.getCity(), task.getFrom(), task.getTo());
                 if(lnNumbers!=null) {
                     if(lnNumbers.size()!=reservedLuckyNumbers)
                         taskCompletedOK=false;
@@ -157,7 +157,7 @@ public class OutProcessor {
                 }
                 //CONCILIATION: Call to BCCS to ask for LC numbers only for FREE numbers
                 logger.info("Conciliation of locked numbers on BCCS: Calling BCCS:SP1_LNROSLCXSUCURSALNRODESDEHASTA to list unlocked numbers using values:city="+task.getCity()+",from="+task.getFrom()+",to="+task.getTo());
-                List<InAudit> lcNumbers = bccsDao.getLcNumbers(task.getCity(), task.getFrom(), task.getTo());
+                List<InAudit> lcNumbers = bccsDao.getLockedNumbers(task.getCity(), task.getFrom(), task.getTo());
                 if(lcNumbers!=null)  {
                     if(lcNumbers.size()>0)
                         taskCompletedOK=false;

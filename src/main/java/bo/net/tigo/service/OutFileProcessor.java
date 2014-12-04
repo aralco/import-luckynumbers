@@ -104,12 +104,7 @@ public class OutFileProcessor {
                 logger.info("Does file exists:"+file+", fullname:"+fileFullName);
                 if(file.delete())   {
                     logger.info("File has been deleted:"+file);
-                    try {
-                        Thread.sleep(30000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    throw new OutFileProcessorException(HttpStatus.NOT_ACCEPTABLE.toString(),"File:"+fileName+" is not ready to be processed.");
+                    throw new OutFileProcessorException(HttpStatus.PARTIAL_CONTENT.toString(),"File:"+fileName+" is not ready to be processed.");
                 }
             }
 
@@ -146,7 +141,16 @@ public class OutFileProcessor {
             e.printStackTrace();
         } catch (OutFileProcessorException e) {
             logger.warn("OutFileProcessorException -> error:" + e.getErrorCode() + ", message: " + e.getErrorMessage());
-            processOutFile(new File(fileFullName));
+            File newFile = new File(fileFullName);
+            do  {
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }while(!newFile.exists());
+            processOutFile(newFile);
+
         } catch (LuckyNumbersGenericException e) {
             logger.warn("LuckyNumbersGenericException -> error:" + e.getErrorCode() + ", message: " + e.getErrorMessage());
         } catch (Exception e)  {

@@ -5,10 +5,7 @@ import bo.net.tigo.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
@@ -80,6 +77,9 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
         if(domainUser==null)    {
             //if user doesn't exist in database must go away
             return null;
+        }
+        if(!domainUser.getEnabled())    {
+            throw new DisabledException("User "+domainUser.getUsername()+", is not enabled to login at this time.");
         }
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>(0);
         authorities.add(new LuckyNumbersGrantedAuthorities(domainUser.getRole()));

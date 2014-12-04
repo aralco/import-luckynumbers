@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
@@ -27,28 +28,51 @@ import java.util.Map;
 @Repository
 public class BCCSDao {
 
-    private SimpleJdbcCall freeNumbersProc;
+    private static final Logger logger = LoggerFactory.getLogger(BCCSDao.class);
+
+    public static final String SUCURSAL = "sucursal";
+    public static final String NRO_DESDE = "nro_desde";
+    public static final String NRO_HASTA = "nro_hasta";
+    public static final String NROCUENTA = "nrocuenta";
+    public static final String MENSAJE = "mensaje";
+    public static final String FROZEN_NUMBERS = "frozenNumbers";
+    public static final String FREE_NUMBERS = "freeNumbers";
+    public static final String UNLOCKED_NUMBERS = "unlockedNumbers";
+    public static final String LOCKED_NUMBERS = "lockedNumbers";
+    public static final String RESERVED_NUMBERS = "reservedNumbers";
     private SimpleJdbcCall frozenNumbersProc;
+    private SimpleJdbcCall freeNumbersProc;
     private SimpleJdbcCall reserveNumberProc;
     private SimpleJdbcCall unlockNumbersProc;
-    private SimpleJdbcCall lcNumbersProc;
-    private SimpleJdbcCall lnNumbersProc;
+    private SimpleJdbcCall lockedNumbersProc;
+    private SimpleJdbcCall reservedNumbersProc;
 
-    private static final Logger logger = LoggerFactory.getLogger(BCCSDao.class);
+    @Value("${storedprocedure.bccs.frozennumbers.name}")
+    private String frozenNumbersProcName;
+    @Value("${storedprocedure.bccs.freenumbers.name}")
+    private String freeNumbersProcName;
+    @Value("${storedprocedure.bccs.reservenumber.name}")
+    private String reserveNumberProcName;
+    @Value("${storedprocedure.bccs.unlocknumbers.name}")
+    private String unlockNumbersProcName;
+    @Value("${storedprocedure.bccs.lockednumbers.name}")
+    private String lockedNumbersProcName;
+    @Value("${storedprocedure.bccs.reservednumbers.name}")
+    private String reservedNumbersProcName;
 
     @Autowired
     public void setDataSource(@Qualifier("as400DataSource") DataSource dataSource) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcTemplate.setResultsMapCaseInsensitive(true);
         this.frozenNumbersProc = new SimpleJdbcCall(jdbcTemplate)
-                .withProcedureName("SP1_LNROSCOXSUCURSALNRODESDEHASTA")
+                .withProcedureName(frozenNumbersProcName)
                 .withoutProcedureColumnMetaDataAccess()
                 .declareParameters(
-                        new SqlParameter("sucursal", Types.NUMERIC),
-                        new SqlParameter("nro_desde", Types.VARCHAR),
-                        new SqlParameter("nro_hasta", Types.VARCHAR)
+                        new SqlParameter(SUCURSAL, Types.NUMERIC),
+                        new SqlParameter(NRO_DESDE, Types.VARCHAR),
+                        new SqlParameter(NRO_HASTA, Types.VARCHAR)
                 )
-                .returningResultSet("frozenNumbers", new ParameterizedRowMapper<InAudit>() {
+                .returningResultSet(FROZEN_NUMBERS, new ParameterizedRowMapper<InAudit>() {
                     @Override
                     public InAudit mapRow(ResultSet resultSet, int i) throws SQLException {
                         InAudit inAudit = new InAudit();
@@ -58,14 +82,14 @@ public class BCCSDao {
                 });
 
         this.freeNumbersProc = new SimpleJdbcCall(jdbcTemplate)
-                .withProcedureName("SP2_LNROSLIXSUCURSALNRODESDEHASTAPORC_ACTESTLC")
+                .withProcedureName(freeNumbersProcName)
                 .withoutProcedureColumnMetaDataAccess()
                 .declareParameters(
-                    new SqlParameter("sucursal", Types.NUMERIC),
-                    new SqlParameter("nro_desde", Types.VARCHAR),
-                    new SqlParameter("nro_hasta", Types.VARCHAR)
+                    new SqlParameter(SUCURSAL, Types.NUMERIC),
+                    new SqlParameter(NRO_DESDE, Types.VARCHAR),
+                    new SqlParameter(NRO_HASTA, Types.VARCHAR)
                 )
-                .returningResultSet("freeNumbers", new ParameterizedRowMapper<InAudit>() {
+                .returningResultSet(FREE_NUMBERS, new ParameterizedRowMapper<InAudit>() {
                     @Override
                     public InAudit mapRow(ResultSet resultSet, int i) throws SQLException {
                         InAudit inAudit = new InAudit();
@@ -75,39 +99,22 @@ public class BCCSDao {
                 });
 
         this.reserveNumberProc = new SimpleJdbcCall(jdbcTemplate)
-        .withProcedureName("SP3_RERSERVALN_NROCUENTACOYLC")
+        .withProcedureName(reserveNumberProcName)
                 .withoutProcedureColumnMetaDataAccess()
                 .declareParameters(
-                        new SqlParameter("nrocuenta", Types.VARCHAR),
-                        new SqlOutParameter("mensaje", Types.VARCHAR)
+                        new SqlParameter(NROCUENTA, Types.VARCHAR),
+                        new SqlOutParameter(MENSAJE, Types.VARCHAR)
                 );
 
         this.unlockNumbersProc = new SimpleJdbcCall(jdbcTemplate)
-                .withProcedureName("SP2_LNROSLCXSUCURSALNRODESDEHASTAPORC_ACTESTLI1")
+                .withProcedureName(unlockNumbersProcName)
                 .withoutProcedureColumnMetaDataAccess()
                 .declareParameters(
-                    new SqlParameter("sucursal", Types.NUMERIC),
-                    new SqlParameter("nro_desde", Types.VARCHAR),
-                    new SqlParameter("nro_hasta", Types.VARCHAR)
+                    new SqlParameter(SUCURSAL, Types.NUMERIC),
+                    new SqlParameter(NRO_DESDE, Types.VARCHAR),
+                    new SqlParameter(NRO_HASTA, Types.VARCHAR)
                 )
-                .returningResultSet("unlockedNumbers", new ParameterizedRowMapper<InAudit>() {
-                            @Override
-                            public InAudit mapRow(ResultSet resultSet, int i) throws SQLException {
-                                InAudit inAudit = new InAudit();
-                                inAudit.setRow(resultSet.getString(1));
-                                return inAudit;
-                            }
-                 });
-
-        this.lcNumbersProc = new SimpleJdbcCall(jdbcTemplate)
-                .withProcedureName("SP1_LNROSLCXSUCURSALNRODESDEHASTA")
-                .withoutProcedureColumnMetaDataAccess()
-                .declareParameters(
-                        new SqlParameter("sucursal", Types.NUMERIC),
-                        new SqlParameter("nro_desde", Types.VARCHAR),
-                        new SqlParameter("nro_hasta", Types.VARCHAR)
-                )
-                .returningResultSet("lcNumbers", new ParameterizedRowMapper<InAudit>() {
+                .returningResultSet(UNLOCKED_NUMBERS, new ParameterizedRowMapper<InAudit>() {
                     @Override
                     public InAudit mapRow(ResultSet resultSet, int i) throws SQLException {
                         InAudit inAudit = new InAudit();
@@ -116,15 +123,32 @@ public class BCCSDao {
                     }
                 });
 
-        this.lnNumbersProc = new SimpleJdbcCall(jdbcTemplate)
-                .withProcedureName("SP1_LNROSLNXSUCURSALNRODESDEHASTA")
+        this.lockedNumbersProc = new SimpleJdbcCall(jdbcTemplate)
+                .withProcedureName(lockedNumbersProcName)
                 .withoutProcedureColumnMetaDataAccess()
                 .declareParameters(
-                        new SqlParameter("sucursal", Types.NUMERIC),
-                        new SqlParameter("nro_desde", Types.VARCHAR),
-                        new SqlParameter("nro_hasta", Types.VARCHAR)
+                        new SqlParameter(SUCURSAL, Types.NUMERIC),
+                        new SqlParameter(NRO_DESDE, Types.VARCHAR),
+                        new SqlParameter(NRO_HASTA, Types.VARCHAR)
                 )
-                .returningResultSet("lnNumbers", new ParameterizedRowMapper<InAudit>() {
+                .returningResultSet(LOCKED_NUMBERS, new ParameterizedRowMapper<InAudit>() {
+                    @Override
+                    public InAudit mapRow(ResultSet resultSet, int i) throws SQLException {
+                        InAudit inAudit = new InAudit();
+                        inAudit.setRow(resultSet.getString(1));
+                        return inAudit;
+                    }
+                });
+
+        this.reservedNumbersProc = new SimpleJdbcCall(jdbcTemplate)
+                .withProcedureName(reservedNumbersProcName)
+                .withoutProcedureColumnMetaDataAccess()
+                .declareParameters(
+                        new SqlParameter(SUCURSAL, Types.NUMERIC),
+                        new SqlParameter(NRO_DESDE, Types.VARCHAR),
+                        new SqlParameter(NRO_HASTA, Types.VARCHAR)
+                )
+                .returningResultSet(RESERVED_NUMBERS, new ParameterizedRowMapper<InAudit>() {
                     @Override
                     public InAudit mapRow(ResultSet resultSet, int i) throws SQLException {
                         InAudit inAudit = new InAudit();
@@ -138,67 +162,65 @@ public class BCCSDao {
 
     public List<InAudit> getFrozenNumbers(int city, String from, String to)    {
         SqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("sucursal", city)
-                .addValue("nro_desde", from)
-                .addValue("nro_hasta", to);
+                .addValue(SUCURSAL, city)
+                .addValue(NRO_DESDE, from)
+                .addValue(NRO_HASTA, to);
         Map out = frozenNumbersProc
                 .execute(parameterSource);
-        logger.info("getFrozenNumbers::"+out.get("frozenNumbers"));
-        return (List<InAudit>)out.get("frozenNumbers");
+        logger.info("getFrozenNumbers::result="+out.get(FROZEN_NUMBERS));
+        return (List<InAudit>)out.get(FROZEN_NUMBERS);
     }
 
     public List<InAudit> getFreeNumbers(int city, String from, String to)    {
         SqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("sucursal", city)
-                .addValue("nro_desde", from)
-                .addValue("nro_hasta", to);
+                .addValue(SUCURSAL, city)
+                .addValue(NRO_DESDE, from)
+                .addValue(NRO_HASTA, to);
         Map out = freeNumbersProc
                 .execute(parameterSource);
-        logger.info("getFreeNumbers::"+out.get("freeNumbers"));
-        return (List<InAudit>)out.get("freeNumbers");
+        logger.info("getFreeNumbers::result="+out.get(FREE_NUMBERS));
+        return (List<InAudit>)out.get(FREE_NUMBERS);
     }
 
     public String reserveNumber(String number)    {
         SqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("nrocuenta", number);
-        logger.info("reserveNumbers::"+number);
+                .addValue(NROCUENTA, number);
+        logger.info("reserveNumber::result="+number);
         Map result = reserveNumberProc.execute(parameterSource);
-        return (String)result.get("mensaje");
+        return (String)result.get(MENSAJE);
     }
 
     public List<InAudit> unlockNumbers(int city, String from, String to)    {
         SqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("sucursal", city)
-                .addValue("nro_desde", from)
-                .addValue("nro_hasta", to);
+                .addValue(SUCURSAL, city)
+                .addValue(NRO_DESDE, from)
+                .addValue(NRO_HASTA, to);
         Map out = unlockNumbersProc
                 .execute(parameterSource);
-        logger.info("unlockNumbers::"+out.get("unlockedNumbers"));
-        return (List<InAudit>)out.get("unlockedNumbers");
+        logger.info("unlockNumbers::result="+out.get("unlockedNumbers"));
+        return (List<InAudit>)out.get(UNLOCKED_NUMBERS);
     }
 
-    public List<InAudit> getLcNumbers(int city, String from, String to)    {
+    public List<InAudit> getLockedNumbers(int city, String from, String to)    {
         SqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("sucursal", city)
-                .addValue("nro_desde", from)
-                .addValue("nro_hasta", to);
-        Map out = lcNumbersProc
+                .addValue(SUCURSAL, city)
+                .addValue(NRO_DESDE, from)
+                .addValue(NRO_HASTA, to);
+        Map out = lockedNumbersProc
                 .execute(parameterSource);
-        logger.info("getLcNumbers::"+out.get("lcNumbers"));
-        return (List<InAudit>)out.get("lcNumbers");
+        logger.info("getLockedNumbers::result="+out.get(LOCKED_NUMBERS));
+        return (List<InAudit>)out.get(LOCKED_NUMBERS);
     }
 
-    public List<InAudit> getLnNumbers(int city, String from, String to)    {
+    public List<InAudit> getReservedNumbers(int city, String from, String to)    {
         SqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("sucursal", city)
-                .addValue("nro_desde", from)
-                .addValue("nro_hasta", to);
-        Map out = lnNumbersProc
+                .addValue(SUCURSAL, city)
+                .addValue(NRO_DESDE, from)
+                .addValue(NRO_HASTA, to);
+        Map out = reservedNumbersProc
                 .execute(parameterSource);
-        logger.info("getLnNumbers::"+out.get("lnNumbers"));
-        return (List<InAudit>)out.get("lnNumbers");
+        logger.info("getReservedNumbers::result="+out.get(RESERVED_NUMBERS));
+        return (List<InAudit>)out.get(RESERVED_NUMBERS);
     }
-
-
 
 }

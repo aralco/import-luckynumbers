@@ -30,11 +30,11 @@ import javax.xml.bind.annotation.*;
  * 
  * 
  */
-@XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "enviarSmsResponse", propOrder = {
     "_return"
 })
+@XmlRootElement(name = "enviarSmsResponse")
 public class EnviarSmsResponse {
 
     @XmlElement(name = "return")

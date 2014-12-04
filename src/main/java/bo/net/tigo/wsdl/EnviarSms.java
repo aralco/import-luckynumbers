@@ -35,13 +35,13 @@ import javax.xml.bind.annotation.XmlType;
  * 
  * 
  */
-@XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "enviarSms", propOrder = {
     "numeroTelefono",
     "corto",
     "mensaje"
 })
+@XmlRootElement(name = "enviarSms")
 public class EnviarSms {
 
     protected String numeroTelefono;
