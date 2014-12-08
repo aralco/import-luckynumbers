@@ -18,9 +18,9 @@ import java.util.List;
 @Service
 public class ClientDetailsServiceImpl implements ClientDetailsService {
 
-    public static final String PASSWORD = "password";
-    public static final String REFRESH_TOKEN = "refresh_token";
-    public static final String CLIENT_CREDENTIALS = "client_credentials";
+    private static final String PASSWORD = "password";
+    private static final String REFRESH_TOKEN = "refresh_token";
+    private static final String CLIENT_CREDENTIALS = "client_credentials";
     private String clientId;
     private String clientSecret;
     private static final Logger logger = LoggerFactory.getLogger(ClientDetailsServiceImpl.class);

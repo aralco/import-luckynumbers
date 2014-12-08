@@ -15,7 +15,7 @@ INSERT INTO "IMPORTLUCKY"."ILN_USER"
 	'Usuario administrador',
 	'admin@email.com',
 	'admin@email.com',
-	'77430988',
+	'77960969',
 	'000000',
 	'000000',
 	'Usuario administrador',

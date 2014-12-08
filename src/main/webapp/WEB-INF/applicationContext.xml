@@ -216,7 +216,7 @@
                            resource-id="springsec" token-services-ref="tokenServices" />
     <!--Looout-->
     <bean id="logoutSuccessHandler" class="bo.net.tigo.security.LogoutImpl" >
-        <property name="tokenstore" ref="tokenStore"></property>
+        <property name="tokenStore" ref="tokenStore"></property>
     </bean>
 
     <!--ACTIVE DIRECTORY Authentication-->
@@ -230,7 +230,7 @@
     <!--Starting taskScheduler-->
     <task:scheduled-tasks scheduler="luckyNumbersScheduler">
         <!--Improve to start using trigger-->
-        <task:scheduled ref="getFrozenAndFreeNumbers" method="processScheduledAndReScheduledTasks" fixed-delay="${scheduler.fixedDelay}"/>
+        <task:scheduled ref="getFrozenAndFreeNumbers" method="processScheduledTasks" fixed-delay="${scheduler.fixedDelay}"/>
         <task:scheduled ref="findAndSaveLuckyNumbers" method="processStartedPhase2Tasks" fixed-delay="${scheduler.fixedDelay}"/>
     </task:scheduled-tasks>
     <task:scheduler id="luckyNumbersScheduler" pool-size="10"/>

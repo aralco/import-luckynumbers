@@ -34,7 +34,7 @@ public class FindAndSaveLuckyNumbers {
 
     @Transactional
     public void processStartedPhase2Tasks() {
-        List<Task> startedPhase2Tasks = taskDao.findbyStatus(Status.STARTED_PHASE2);
+        List<Task> startedPhase2Tasks = taskDao.findByStatus(Status.STARTED_PHASE2);
         logger.info("Total startedPhase2Tasks Tasks:" + startedPhase2Tasks.size());
         if(startedPhase2Tasks.size()>=0)    {
             Calendar calendar = Calendar.getInstance();

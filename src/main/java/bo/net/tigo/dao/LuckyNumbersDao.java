@@ -23,8 +23,8 @@ import java.util.Map;
 public class LuckyNumbersDao {
 
     private static final Logger logger = LoggerFactory.getLogger(LuckyNumbersDao.class);
-    public static final String NUMERO = "NUMERO";
-    public static final String RESERVE_BCCS = "RESERVE_BCCS";
+    private static final String NUMERO = "NUMERO";
+    private static final String RESERVE_BCCS = "RESERVE_BCCS";
 
     private SimpleJdbcCall unReserveNumberProc;
     @Value("${storedprocedure.luckynumber.unreservenumber.name}")

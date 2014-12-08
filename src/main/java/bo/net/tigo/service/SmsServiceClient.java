@@ -29,7 +29,7 @@ public class SmsServiceClient extends WebServiceGatewaySupport {
                 if(response.getValue() instanceof EnviarSmsResponse) {
                     EnviarSmsResponse enviarSmsResponse = (EnviarSmsResponse)response.getValue();
                     if(enviarSmsResponse.getReturn().getGeneralResponse().getStatus().equals("OK")){
-                        logger.info("SMS has been succesfully sent to "+phone+", with message from sms service: "
+                        logger.info("SMS has been successfully sent to "+phone+", with message from sms service: "
                                 +enviarSmsResponse.getReturn().getGeneralResponse().getMessage());
                     } else  {
                         logger.warn("SMS could not been sent to "+phone+", with message from sms service: "

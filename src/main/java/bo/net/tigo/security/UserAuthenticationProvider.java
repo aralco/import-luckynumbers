@@ -1,7 +1,9 @@
 package bo.net.tigo.security;
 
 import bo.net.tigo.dao.UserDao;
+import bo.net.tigo.model.Action;
 import bo.net.tigo.model.User;
+import bo.net.tigo.service.AuditService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,42 +27,49 @@ import java.util.List;
 @Transactional
 public class UserAuthenticationProvider implements AuthenticationProvider {
 
+    private static final Logger logger = LoggerFactory.getLogger(UserAuthenticationProvider.class);
+
+    @Autowired
+    ActiveDirectoryLdapAuthenticationProvider activeDirectoryLdapAuthenticationProvider;
     @Autowired
     private UserDao userDao;
     @Autowired
-    ActiveDirectoryLdapAuthenticationProvider activeDirectoryLdapAuthenticationProvider;
-    private static final Logger logger = LoggerFactory.getLogger(UserAuthenticationProvider.class);
+    private AuditService auditService;
 
     @Override
     public Authentication authenticate(Authentication authentication)
             throws AuthenticationException {
-        logger.info("Authentication to authenticate:"+authentication);
+        logger.info("Authentication to authenticate:" + authentication);
         if(authentication!=null)    {
             UserDetails userDetails = loadUserByUsername(authentication.getPrincipal().toString());
             if(userDetails==null)
-                throw new UsernameNotFoundException("User doesn't exists.");
+                throw new UsernameNotFoundException("El usuario "+authentication.getPrincipal().toString()+" no existe.");
 //PROD MODE
 //            authentication = activeDirectoryLdapAuthenticationProvider.authenticate(authentication);
 //            if(authentication!=null && authentication.isAuthenticated())    {
 //                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(authentication.getPrincipal(), authentication.getCredentials(), userDetails.getAuthorities());
 //                logger.info("User successfully authenticated - authenticate:"+usernamePasswordAuthenticationToken);
+//                auditService.audit(Action.AUTENTICACION);
 //                return usernamePasswordAuthenticationToken;
 //DEV MODE
             if(authentication.getPrincipal().equals("sysportal")&& authentication.getCredentials().equals("Sysp0rt4l")) {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(authentication.getPrincipal(), authentication.getCredentials(), userDetails.getAuthorities());
-                logger.info("User successfully authenticated - authenticate:"+usernamePasswordAuthenticationToken);
+                logger.info("User successfully authenticated - authenticate:" + usernamePasswordAuthenticationToken);
+                auditService.audit(Action.AUTENTICACION);
                 return usernamePasswordAuthenticationToken;
             }
             else if(authentication.getPrincipal().equals("user1")&& authentication.getCredentials().equals("user1")) {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(authentication.getPrincipal(), authentication.getCredentials(), userDetails.getAuthorities());
                 logger.info("User successfully authenticated - authenticate:"+usernamePasswordAuthenticationToken);
+                auditService.audit(Action.AUTENTICACION);
                 return usernamePasswordAuthenticationToken;
             } else if(authentication.getPrincipal().equals("user2")&& authentication.getCredentials().equals("user2")) {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(authentication.getPrincipal(), authentication.getCredentials(), userDetails.getAuthorities());
                 logger.info("User successfully authenticated - authenticate:"+usernamePasswordAuthenticationToken);
+                auditService.audit(Action.AUTENTICACION);
                 return usernamePasswordAuthenticationToken;
             } else {
-                throw new BadCredentialsException("Bad User Credentials.");
+                throw new BadCredentialsException("Credenciales de acceso no válidas.");
             }
         } else  {
             throw new AuthenticationCredentialsNotFoundException("Authentication object is null in SecurityContext");
@@ -79,7 +88,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
             return null;
         }
         if(!domainUser.getEnabled())    {
-            throw new DisabledException("User "+domainUser.getUsername()+", is not enabled to login at this time.");
+            throw new DisabledException("El usuario "+domainUser.getUsername()+", no está habilitado.");
         }
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>(0);
         authorities.add(new LuckyNumbersGrantedAuthorities(domainUser.getRole()));

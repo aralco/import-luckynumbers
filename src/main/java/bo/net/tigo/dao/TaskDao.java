@@ -23,9 +23,9 @@ public interface TaskDao {
 
     public List<Task> findByJob(Job job);
 
-    public List<Task> findScheduledAndReScheduledTasks(Date currentDate);
+    public List<Task> findScheduledTasksInRange(Date currentDate);
 
-    public List<Task> findbyStatus(Status status);
+    public List<Task> findByStatus(Status status);
 
     public Task findByFileName(String filename);
 }

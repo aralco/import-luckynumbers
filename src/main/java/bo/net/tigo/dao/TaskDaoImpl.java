@@ -60,25 +60,24 @@ public class TaskDaoImpl implements TaskDao {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Task> findScheduledAndReScheduledTasks(Date currentDate) {
+    public List<Task> findScheduledTasksInRange(Date currentDate) {
         Session session = sessionFactory.getCurrentSession();
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.SECOND, -60);
         Date pastDate = calendar.getTime();
 
         return session.createQuery("from Task " +
-                "where status in (:scheduled ,:rescheduled) " +
-                "and executionDate between :pastDate "+
+                "where status = :scheduled " +
+                "and executionDate between :pastDate " +
                 "and :currentDate")
                 .setParameter("scheduled", Status.SCHEDULED.name())
-                .setParameter("rescheduled", Status.RE_SCHEDULED.name())
                 .setParameter("pastDate", pastDate)
                 .setParameter("currentDate", currentDate).list();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Task> findbyStatus(Status status) {
+    public List<Task> findByStatus(Status status) {
         Session session = sessionFactory.getCurrentSession();
         return session.createQuery("from Task " +
                 "where status = :status")

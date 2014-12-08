@@ -31,13 +31,18 @@ public class MonitorService {
     @Transactional
     public List<Job> monitorJobs(Long jobId, String owner, String jobState, Date from, Date to)  {
         List<Job> jobs= new ArrayList<Job>(0);
-//        if(jobId==0 && owner=="" && jobState=="" && from==null && to==null)  {
-//            jobs = jobDao.findAll();
-//        }
-//        else if(jobId==null && owner==null && jobState==null && from==null && to==null)  {
-//            jobs = jobDao.findAll();
-//        }
-        jobs = jobDao.findAll();
+
+        if(jobId!=0)  {
+            jobs.add(jobDao.findOne(jobId));
+        } else if(!owner.equals("NA"))  {
+            jobs = jobDao.finByOwner(owner);
+        } else if(!jobState.equals("NA"))   {
+            jobs = jobDao.finByState(jobState);
+        } else if(from!=null && to!=null)   {
+            jobs = jobDao.finBetweenDates(from, to);
+        } else {
+            jobs = jobDao.findAll();
+        }
         return jobs;
     }
 

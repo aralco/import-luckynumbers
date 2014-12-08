@@ -3,10 +3,7 @@ package bo.net.tigo.service;
 import bo.net.tigo.dao.JobDao;
 import bo.net.tigo.dao.TaskDao;
 import bo.net.tigo.exception.LuckyNumbersGenericException;
-import bo.net.tigo.model.Job;
-import bo.net.tigo.model.State;
-import bo.net.tigo.model.Status;
-import bo.net.tigo.model.Task;
+import bo.net.tigo.model.*;
 import bo.net.tigo.rest.domain.JobRequest;
 import bo.net.tigo.rest.domain.TaskRequest;
 import bo.net.tigo.security.SecurityUtils;
@@ -30,12 +27,15 @@ public class SchedulerService {
     private JobDao jobDao;
     @Autowired
     private TaskDao taskDao;
+    @Autowired
+    private AuditService auditService;
 
     private static final Logger logger = LoggerFactory.getLogger(SchedulerService.class);
 
     @Transactional
     public Job createJob(JobRequest jobRequest) {
         logger.info("createJob:"+jobRequest);
+        auditService.audit(Action.CREAR_PROGRAMACION);
         Date creationDate = new Date();
         Job job = new Job();
         job.setName(jobRequest.getName());
@@ -89,6 +89,7 @@ public class SchedulerService {
     @Transactional
     public Job updateJob(Long jobId, Job job)   {
         logger.info("updateJob:job="+job);
+        auditService.audit(Action.EDITAR_PROGRAMACION);
         if(!job.getState().equals(State.NOT_STARTED.name()))
             throw new LuckyNumbersGenericException(HttpStatus.PRECONDITION_FAILED.toString(),"Related Job must have NOT_STARTED state");
         Date currentDate = new Date();
@@ -108,6 +109,7 @@ public class SchedulerService {
 
     @Transactional
     public void deleteJob(Long jobId)   {
+        auditService.audit(Action.ELIMINAR_PROGRAMACION);
         Job job = jobDao.findOne(jobId);
         if(job==null)   {
             throw new LuckyNumbersGenericException(HttpStatus.NOT_FOUND.toString(),"Related Job cannot be found");
@@ -120,6 +122,7 @@ public class SchedulerService {
 
     @Transactional
     public Task createTask(Long jobId, TaskRequest taskRequest) {
+        auditService.audit(Action.CREAR_TAREA);
         Job job = jobDao.findOne(jobId);
         if(job==null)   {
             throw new LuckyNumbersGenericException(HttpStatus.NOT_FOUND.toString(),"Related Job cannot be found");
@@ -153,26 +156,29 @@ public class SchedulerService {
 
     @Transactional
     public Task updateTask(Task task) {
+        auditService.audit(Action.EDITAR_TAREA);
         if(!task.getStatus().equals(Status.SCHEDULED.name()))
             throw new LuckyNumbersGenericException(HttpStatus.PRECONDITION_FAILED.toString(),"Related Task must have NOT_SCHEDULED status");
         Date currentDate = new Date();
         task.setLastUpdate(currentDate);
-        taskDao.update(task);
         Job job = task.getJob();
         job.setTotalTasks(job.getTotalTasks()+1);
+        taskDao.update(task);
         return task;
     }
 
     @Transactional
-    public void deleteTask(Long taskId) {
+    public void deleteTask(LonFixesg taskId) {
+        auditService.audit(Action.ELIMINAR_TAREA);
         Task task = taskDao.findOne(taskId);
         if(task==null)
             throw new LuckyNumbersGenericException(HttpStatus.NOT_FOUND.toString(),"Related Task cannot be found");
         if(!task.getStatus().equals(Status.SCHEDULED.name()))
             throw new LuckyNumbersGenericException(HttpStatus.PRECONDITION_FAILED.toString(),"Related Task must have NOT_SCHEDULED status");
-        taskDao.delete(task);
         Job job = task.getJob();
         job.setTotalTasks(job.getTotalTasks()-1);
+        job.getTasks().remove(task);
+        taskDao.delete(task);
     }
 
 }

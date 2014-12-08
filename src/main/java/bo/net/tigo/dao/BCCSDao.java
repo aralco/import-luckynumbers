@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
@@ -30,16 +30,16 @@ public class BCCSDao {
 
     private static final Logger logger = LoggerFactory.getLogger(BCCSDao.class);
 
-    public static final String SUCURSAL = "sucursal";
-    public static final String NRO_DESDE = "nro_desde";
-    public static final String NRO_HASTA = "nro_hasta";
-    public static final String NROCUENTA = "nrocuenta";
-    public static final String MENSAJE = "mensaje";
-    public static final String FROZEN_NUMBERS = "frozenNumbers";
-    public static final String FREE_NUMBERS = "freeNumbers";
-    public static final String UNLOCKED_NUMBERS = "unlockedNumbers";
-    public static final String LOCKED_NUMBERS = "lockedNumbers";
-    public static final String RESERVED_NUMBERS = "reservedNumbers";
+    private static final String SUCURSAL = "sucursal";
+    private static final String NRO_DESDE = "nro_desde";
+    private static final String NRO_HASTA = "nro_hasta";
+    private static final String NROCUENTA = "nrocuenta";
+    private static final String MENSAJE = "mensaje";
+    private static final String FROZEN_NUMBERS = "frozenNumbers";
+    private static final String FREE_NUMBERS = "freeNumbers";
+    private static final String UNLOCKED_NUMBERS = "unlockedNumbers";
+    private static final String LOCKED_NUMBERS = "lockedNumbers";
+    private static final String RESERVED_NUMBERS = "reservedNumbers";
     private SimpleJdbcCall frozenNumbersProc;
     private SimpleJdbcCall freeNumbersProc;
     private SimpleJdbcCall reserveNumberProc;
@@ -72,7 +72,7 @@ public class BCCSDao {
                         new SqlParameter(NRO_DESDE, Types.VARCHAR),
                         new SqlParameter(NRO_HASTA, Types.VARCHAR)
                 )
-                .returningResultSet(FROZEN_NUMBERS, new ParameterizedRowMapper<InAudit>() {
+                .returningResultSet(FROZEN_NUMBERS, new RowMapper<InAudit>() {
                     @Override
                     public InAudit mapRow(ResultSet resultSet, int i) throws SQLException {
                         InAudit inAudit = new InAudit();
@@ -89,7 +89,7 @@ public class BCCSDao {
                     new SqlParameter(NRO_DESDE, Types.VARCHAR),
                     new SqlParameter(NRO_HASTA, Types.VARCHAR)
                 )
-                .returningResultSet(FREE_NUMBERS, new ParameterizedRowMapper<InAudit>() {
+                .returningResultSet(FREE_NUMBERS, new RowMapper<InAudit>() {
                     @Override
                     public InAudit mapRow(ResultSet resultSet, int i) throws SQLException {
                         InAudit inAudit = new InAudit();
@@ -114,7 +114,7 @@ public class BCCSDao {
                     new SqlParameter(NRO_DESDE, Types.VARCHAR),
                     new SqlParameter(NRO_HASTA, Types.VARCHAR)
                 )
-                .returningResultSet(UNLOCKED_NUMBERS, new ParameterizedRowMapper<InAudit>() {
+                .returningResultSet(UNLOCKED_NUMBERS, new RowMapper<InAudit>() {
                     @Override
                     public InAudit mapRow(ResultSet resultSet, int i) throws SQLException {
                         InAudit inAudit = new InAudit();
@@ -131,7 +131,7 @@ public class BCCSDao {
                         new SqlParameter(NRO_DESDE, Types.VARCHAR),
                         new SqlParameter(NRO_HASTA, Types.VARCHAR)
                 )
-                .returningResultSet(LOCKED_NUMBERS, new ParameterizedRowMapper<InAudit>() {
+                .returningResultSet(LOCKED_NUMBERS, new RowMapper<InAudit>() {
                     @Override
                     public InAudit mapRow(ResultSet resultSet, int i) throws SQLException {
                         InAudit inAudit = new InAudit();
@@ -148,7 +148,7 @@ public class BCCSDao {
                         new SqlParameter(NRO_DESDE, Types.VARCHAR),
                         new SqlParameter(NRO_HASTA, Types.VARCHAR)
                 )
-                .returningResultSet(RESERVED_NUMBERS, new ParameterizedRowMapper<InAudit>() {
+                .returningResultSet(RESERVED_NUMBERS, new RowMapper<InAudit>() {
                     @Override
                     public InAudit mapRow(ResultSet resultSet, int i) throws SQLException {
                         InAudit inAudit = new InAudit();
@@ -160,6 +160,7 @@ public class BCCSDao {
 
     }
 
+    @SuppressWarnings("unchecked")
     public List<InAudit> getFrozenNumbers(int city, String from, String to)    {
         SqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue(SUCURSAL, city)
@@ -171,6 +172,7 @@ public class BCCSDao {
         return (List<InAudit>)out.get(FROZEN_NUMBERS);
     }
 
+    @SuppressWarnings("unchecked")
     public List<InAudit> getFreeNumbers(int city, String from, String to)    {
         SqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue(SUCURSAL, city)
@@ -190,6 +192,7 @@ public class BCCSDao {
         return (String)result.get(MENSAJE);
     }
 
+    @SuppressWarnings("unchecked")
     public List<InAudit> unlockNumbers(int city, String from, String to)    {
         SqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue(SUCURSAL, city)
@@ -201,6 +204,7 @@ public class BCCSDao {
         return (List<InAudit>)out.get(UNLOCKED_NUMBERS);
     }
 
+    @SuppressWarnings("unchecked")
     public List<InAudit> getLockedNumbers(int city, String from, String to)    {
         SqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue(SUCURSAL, city)
@@ -212,6 +216,7 @@ public class BCCSDao {
         return (List<InAudit>)out.get(LOCKED_NUMBERS);
     }
 
+    @SuppressWarnings("unchecked")
     public List<InAudit> getReservedNumbers(int city, String from, String to)    {
         SqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue(SUCURSAL, city)

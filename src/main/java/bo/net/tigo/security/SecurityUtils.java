@@ -37,11 +37,11 @@ public class SecurityUtils {
 
         //PROD MODE
 //        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        String username = null;
+//        String username;
 //        if (principal instanceof UserDetails) {
 //            username = ((UserDetails)principal).getUsername();
 //        } else
-//            throw new UsernameNotFoundException("user doesn't exists.");
+//            throw new UsernameNotFoundException("User doesn't exist.");
 //        return username;
 
     }

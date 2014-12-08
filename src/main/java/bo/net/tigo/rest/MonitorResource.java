@@ -31,8 +31,8 @@ public class MonitorResource {
             @RequestParam(value = "jobId", defaultValue = "0") Long jobId,
             @RequestParam(value = "owner", defaultValue = "NA") String owner,
             @RequestParam(value = "jobState", defaultValue = "NA") String jobState,
-            @RequestParam(value = "from", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
-            @RequestParam(value = "to", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date to)   {
+            @RequestParam(value = "from", defaultValue = " ") @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
+            @RequestParam(value = "to", defaultValue = " ") @DateTimeFormat(pattern = "yyyy-MM-dd") Date to)   {
         logger.info("monitorJobs:jobId="+jobId+", owner="+owner+", jobState="+jobState+", from="+from+", to="+to);
         List<Job> jobs = monitorService.monitorJobs(jobId, owner, jobState, from, to);
         return new ResponseEntity<List<Job>>(jobs, HttpStatus.OK);

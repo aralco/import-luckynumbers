@@ -10,14 +10,14 @@ import java.util.Date;
  */
 public class City {
     private Long id;
-        Integer code;
-        String name;
-        String description;
-        Boolean enabled;
+        private Integer code;
+        private String name;
+        private String description;
+        private Boolean enabled;
         @JsonSerialize(using=DateSerializer.class)
-        Date createdDate;
+        private Date createdDate;
         @JsonSerialize(using=DateSerializer.class)
-        Date lastUpdate;
+        private Date lastUpdate;
 
     public City(Long id, Integer code, String name, String description, Boolean enabled, Date createdDate, Date lastUpdate) {
         this.id = id;

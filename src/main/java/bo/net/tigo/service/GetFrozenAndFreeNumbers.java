@@ -14,9 +14,8 @@ import org.springframework.integration.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -27,6 +26,9 @@ import java.util.List;
  */
 @Service
 public class GetFrozenAndFreeNumbers {
+
+    private static final Logger logger = LoggerFactory.getLogger(GetFrozenAndFreeNumbers.class);
+    private static final String UTF_8 = "UTF-8";
     @Autowired
     private TaskDao taskDao;
     @Autowired
@@ -38,17 +40,15 @@ public class GetFrozenAndFreeNumbers {
     @Autowired
     private OutAuditDao outAuditDao;
 
-    private static final Logger logger = LoggerFactory.getLogger(GetFrozenAndFreeNumbers.class);
-
     @Transactional
-    public void processScheduledAndReScheduledTasks() throws IOException {
-        List<Task> scheduledAndReScheduledTasks = taskDao.findScheduledAndReScheduledTasks(new Date());
-        logger.info("Total ScheduledAndReScheduled Tasks:" + scheduledAndReScheduledTasks.size());
-        if(scheduledAndReScheduledTasks.size()<=0)   {
-            logger.info("No ScheduledAndReScheduled tasks to execute:" + scheduledAndReScheduledTasks.size());
+    public void processScheduledTasks() throws IOException {
+        List<Task> scheduledTasks = taskDao.findScheduledTasksInRange(new Date());
+        logger.info("Total ScheduledAndReScheduled Tasks:" + scheduledTasks.size());
+        if(scheduledTasks.size()<=0)   {
+            logger.info("No ScheduledAndReScheduled tasks to execute:" + scheduledTasks.size());
         } else  {
             Calendar calendar = Calendar.getInstance();
-            for(Task task:scheduledAndReScheduledTasks) {
+            for(Task task:scheduledTasks) {
                 StringBuilder taskLog = new StringBuilder();
                 Date currentDate = calendar.getTime();
                 Job job = task.getJob();
@@ -98,11 +98,12 @@ public class GetFrozenAndFreeNumbers {
                     logger.info("File generated:"+inFile);
                     taskLog.append("Archivo generado: ").append(fileName).append(" ||");
 
-                    if(!inFile.exists())
-                        inFile.createNewFile();
-                    logger.info("File exists:"+inFile);
+                    if(inFile.createNewFile())
+                        logger.info("File didn't exist and was successfully created:"+inFile);
+                    else
+                        logger.warn("File already exists:" + inFile);
                     FileOutputStream fileOutputStream = new FileOutputStream(inFile);
-                    byte[] contentInBytes = fileContent.getBytes();
+                    byte[] contentInBytes = fileContent.getBytes(Charset.forName(UTF_8));
                     fileOutputStream.write(contentInBytes);
                     fileOutputStream.flush();
                     fileOutputStream.close();
@@ -129,7 +130,6 @@ public class GetFrozenAndFreeNumbers {
                         "Total de archivos .in creados: "+(inFiles==null?0:inFiles)+" ||"+
                         "Total de archivos .out creados: "+(outFiles==null?0:outFiles)+" ||";
                 job.setSummary(jobSummary);
-                //TODO calculate the coverage based on tasks
                 float jobPercentage=50;
                 job.setTotalCoverage(jobPercentage+"%");
                 job.setLastUpdate(currentDate);

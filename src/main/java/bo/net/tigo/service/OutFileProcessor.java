@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,14 +30,16 @@ import java.util.regex.Pattern;
 @Service
 @Transactional
 public class OutFileProcessor {
+
+    private static final Logger logger = LoggerFactory.getLogger(OutFileProcessor.class);
+    private static final String UTF_8 = "UTF-8";
+
     @Autowired
     private InAuditDao inAuditDao;
     @Autowired
     private OutAuditDao outAuditDao;
     @Autowired
     private TaskDao taskDao;
-
-    private static final Logger logger = LoggerFactory.getLogger(OutFileProcessor.class);
 
     public void processOutFile(File file) throws Exception{
         StringBuilder taskLog = new StringBuilder();
@@ -45,12 +48,11 @@ public class OutFileProcessor {
         BufferedReader bufferedReader = null;
         String splitBy = ",";
         try {
-            bufferedReader = new BufferedReader(new FileReader(file));
-            String line = "";
+            bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(file), Charset.forName(UTF_8)));
+            String line;
             int processed=0;
             int passed=0;
             int failed=0;
-            //TODO fix percentage maybe we could ask this value from .in file
             float percentage=75;
             Date currentDate = Calendar.getInstance().getTime();
             String fileName = file.getName();
