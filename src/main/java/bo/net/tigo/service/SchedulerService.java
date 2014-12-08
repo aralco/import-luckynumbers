@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -92,11 +93,9 @@ public class SchedulerService {
         auditService.audit(Action.EDITAR_PROGRAMACION);
         if(!job.getState().equals(State.NOT_STARTED.name()))
             throw new LuckyNumbersGenericException(HttpStatus.PRECONDITION_FAILED.toString(),"Related Job must have NOT_STARTED state");
-        Date currentDate = new Date();
+        Date currentDate = Calendar.getInstance().getTime();
         if(job.getNow())
             job.setScheduledDate(currentDate);
-//        else
-//            job.setScheduledDate(job.getScheduledDate());
         for(Task task : job.getTasks()) {
             task.setExecutionDate(job.getScheduledDate());
             task.setLastUpdate(currentDate);
@@ -161,8 +160,6 @@ public class SchedulerService {
             throw new LuckyNumbersGenericException(HttpStatus.PRECONDITION_FAILED.toString(),"Related Task must have NOT_SCHEDULED status");
         Date currentDate = new Date();
         task.setLastUpdate(currentDate);
-        Job job = task.getJob();
-        job.setTotalTasks(job.getTotalTasks()+1);
         taskDao.update(task);
         return task;
     }
