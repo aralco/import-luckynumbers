@@ -168,7 +168,7 @@ public class SchedulerService {
     }
 
     @Transactional
-    public void deleteTask(LonFixesg taskId) {
+    public void deleteTask(Long taskId) {
         auditService.audit(Action.ELIMINAR_TAREA);
         Task task = taskDao.findOne(taskId);
         if(task==null)
