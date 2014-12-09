@@ -20,8 +20,8 @@ import java.util.List;
 public class NotificationService {
 
     private static final Logger logger = LoggerFactory.getLogger(NotificationService.class);
-//    @Autowired
-//    private SmsServiceClient smsServiceClient;
+    @Autowired
+    private SmsServiceClient smsServiceClient;
     @Autowired
     private ContactDao contactDao;
     @Autowired
@@ -36,11 +36,11 @@ public class NotificationService {
         List<Contact> contactList = contactDao.findEnabled(true);
         String message = getMessage(jobName, state);
         logger.info("Sending notification to job owner:"+username);
-//        smsServiceClient.sendSmsNotification(user.getPhone1(), message);
+        smsServiceClient.sendSmsNotification(user.getPhone1(), message);
         if(contactList!=null && contactList.size()>0)   {
             for(Contact contact : contactList)  {
                 logger.info("Sending notification to contact:"+contact.getName());
-//                smsServiceClient.sendSmsNotification(contact.getPhone1(), message);
+                smsServiceClient.sendSmsNotification(contact.getPhone1(), message);
             }
         }
     }

@@ -41,7 +41,7 @@ public class OutFileProcessor {
     @Autowired
     private TaskDao taskDao;
 
-    public void processOutFile(File file) throws Exception{
+    public void processOutFile(File file) {
         StringBuilder taskLog = new StringBuilder();
         logger.info("Processing File: " + file);
         String fileFullName = file.toString();

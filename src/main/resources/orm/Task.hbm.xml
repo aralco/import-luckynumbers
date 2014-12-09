@@ -65,6 +65,12 @@
         <property name="lcNumbersInBccs" type="java.lang.Long">
             <column name="ILN_TASK_LC_NUMBERS_IN_BCCS"/>
         </property>
+        <property name="diffReservedNumbers" type="java.lang.Long">
+            <column name="ILN_TASK_DIFF_RESERVED_NUMBERS"/>
+        </property>
+        <property name="diffLockedNumbers" type="java.lang.Long">
+            <column name="ILN_TASK_DIFF_BLOCKED_NUMBERS"/>
+        </property>
         <property name="createdDate" type="java.util.Date">
             <column name="ILN_TASK_CREATED_DATE"/>
         </property>

@@ -56,6 +56,12 @@
         <property name="lcNumbersInBccs" type="java.lang.Long">
             <column name="ILN_JOB_LC_NUMBERS_IN_BCCS"/>
         </property>
+        <property name="diffReservedNumbers" type="java.lang.Long">
+            <column name="ILN_JOB_DIFF_RESERVED_NUMBERS"/>
+        </property>
+        <property name="diffLockedNumbers" type="java.lang.Long">
+            <column name="ILN_JOB_DIFF_BLOCKED_NUMBERS"/>
+        </property>
         <property name="summary" type="java.lang.String">
             <column name="ILN_JOB_SUMMARY" sql-type="clob"/>
         </property>
