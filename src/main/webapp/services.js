@@ -218,6 +218,7 @@ luckynumbersApp.factory('AuthenticationSharedService', function ($rootScope, $ht
                     Account.get(function(data) {
                        Session.create(data.name, data.id, data.role);
                        $rootScope.account = Session;
+                       $rootScope.username = Session.login;
                         authService.loginConfirmed(data);
                     });
                 }).error(function (data, status, headers, config) {
@@ -257,6 +258,7 @@ luckynumbersApp.factory('AuthenticationSharedService', function ($rootScope, $ht
                         Account.get(function(data) {
                             Session.create(data.name, data.id, data.role);
                             $rootScope.account = Session;
+                            $rootScope.username = Session.login;
                             if (!$rootScope.isAuthorized(authorizedRoles)) {
                                 // user is not allowed
                                $rootScope.$broadcast("event:auth-notAuthorized");
