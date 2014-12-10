@@ -17,14 +17,14 @@
 
     <p data-ng-hide="addMode"><a data-ng-click="toggleAdd()" href="javascript:;" class="btn btn-primary">Agregar nuevo contacto</a></p>
     <form name="addContact" data-ng-show="addMode" style="width:600px;margin:0px auto;">
-    <div class="dialog dialog-success" style="text-align:left;padding:15px;">
-        <label>Nombre completo:</label><input type="text" data-ng-model="newContact.name" required /><br>
-        <label>Descripcion:</label><input type="text" data-ng-model="newContact.description" required /><br>
-        <label>E-mail:</label><input type="email" data-ng-model="newContact.email1" required /><br>
-        <label>Teléfono:</label><input type="text" data-ng-model="newContact.phone1" required /><br>
-        <label>Habilitado:</label><input type="checkbox" ng-model="newContact.enabled" required /><br>
-        <br />
-        <br />
+    <div class="dialog dialog-success">
+    <table class="table table-striped table-hover">
+        <tr><td style="text-align: left;"><label>Nombre completo:</label></td><td><input type="text" data-ng-model="newContact.name" required /></td></tr>
+        <tr><td style="text-align: left;"><label>Descripcion:</label></td><td><input type="text" data-ng-model="newContact.description" required /></td></tr>
+        <tr><td style="text-align: left;"><label>E-mail:</label></td><td><input type="email" data-ng-model="newContact.email1" required /></td></tr>
+        <tr><td style="text-align: left;"><label>Teléfono:</label></td><td><input type="text" data-ng-model="newContact.phone1" required /></td></tr>
+        <tr><td style="text-align: left;"><label>Habilitado:</label></td><td><input type="checkbox" ng-model="newContact.enabled" required /></td></tr>
+     </table>
         <input type="submit" value="Agregar" data-ng-click="add()" data-ng-disabled="!addContact.$valid" class="btn btn-primary" />
         <input type="button" value="Cancelar" data-ng-click="toggleAdd()" class="btn btn-primary" />
         <br /><br />
@@ -41,30 +41,30 @@
         </tr>
 
         <tr data-ng-repeat="newContact in contactos">
-            <td><strong data-ng-hide="editMode">{{ newContact.id }}</strong></td>
+            <td><strong data-ng-hide="mostrarContacto($index)">{{ newContact.id }}</strong></td>
             <td>
-                <p data-ng-hide="editMode">{{ newContact.name }}</p>
-                <input data-ng-show="editMode" type="text" data-ng-model="newContact.name" />
+                <p data-ng-hide="mostrarContacto($index)">{{ newContact.name }}</p>
+                <input data-ng-show="mostrarContacto($index)" type="text" data-ng-model="newContact.name" />
             </td>
             <td>
-                <p data-ng-hide="editMode">{{ newContact.description }}</p>
-                <input data-ng-show="editMode" type="text" data-ng-model="newContact.description" />
+                <p data-ng-hide="mostrarContacto($index)">{{ newContact.description }}</p>
+                <input data-ng-show="mostrarContacto($index)" type="text" data-ng-model="newContact.description" />
             </td>
             <td>
-                <p data-ng-hide="editMode">{{ newContact.email1 }}</p>
-                <input data-ng-show="editMode" type="email" data-ng-model="newContact.email1" />
+                <p data-ng-hide="mostrarContacto($index)">{{ newContact.email1 }}</p>
+                <input data-ng-show="mostrarContacto($index)" type="email" data-ng-model="newContact.email1" />
             </td>
             <td>
-                <p data-ng-hide="editMode">{{ newContact.phone1 }}</p>
-                <input data-ng-show="editMode" type="text" data-ng-model="newContact.phone1" />
+                <p data-ng-hide="mostrarContacto($index)">{{ newContact.phone1 }}</p>
+                <input data-ng-show="mostrarContacto($index)" type="text" data-ng-model="newContact.phone1" />
             </td>
             <td>
-               <p data-ng-hide="editMode">{{ newContact.enabled }}</p>  
-                <label data-ng-show="editMode">Habilitado:</label><input data-ng-show="editMode" type="checkbox" ng-model="newContact.enabled" required />
+               <p data-ng-hide="mostrarContacto($index)">{{ newContact.enabled }}</p>  
+                <label data-ng-show="mostrarContacto($index)">Habilitado:</label><input data-ng-show="mostrarContacto($index)" type="checkbox" ng-model="newContact.enabled" required />
             </td>
             <td>
-                <p data-ng-hide="editMode"><a href="javascript:;" class="btn btn-sm btn-primary" data-ng-click="toggleEdit()"><span class="fui-new"></span>&nbsp;&nbsp;Editar</a></p>
-                <p data-ng-show="editMode"><a data-ng-click="save(newContact);" href="javascript:;">Guardar</a> | <a data-ng-click="toggleEdit()" href="javascript:;">Cancelar</a></p>
+                <p data-ng-hide="mostrarContacto($index)"><a href="javascript:;" class="btn btn-sm btn-primary" data-ng-click="toggleEdit(newContact, $index)"><span class="fui-new"></span>&nbsp;&nbsp;Editar</a></p>
+                <p data-ng-show="mostrarContacto($index)"><a data-ng-click="save(newContact);" href="javascript:;">Guardar</a> | <a data-ng-click="toggleEdit(newContact, $index)" href="javascript:;">Cancelar</a></p>
             </td>
         </tr>
     </table>

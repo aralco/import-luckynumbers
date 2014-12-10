@@ -21,12 +21,12 @@
     <p data-ng-hide="addMode"><a data-ng-click="toggleAdd()" href="javascript:;" class="btn btn-primary">Agregar nueva ciudad</a></p>
     <form name="addCity" data-ng-show="addMode" style="width:600px;margin:0px auto;">
     <div class="dialog dialog-success">
-        <label>Código:</label><input type="text" data-ng-model="newCity.code" required /><br /><br>
-        <label>Nombre:</label><input type="text" data-ng-model="newCity.name" required /><br /><br>
-        <label>Descripción:</label><input type="text" data-ng-model="newCity.description" required /><br /><br>
-        <label>Habilitada:</label><input type="checkbox" ng-model="newCity.enabled" required /><br /><br>
-        <br />
-        <br />
+        <table class="table table-striped table-hover">
+        <tr><td style="text-align: left;"><label>Código:</label></td><td><input type="text" data-ng-model="newCity.code" required /></td></tr>
+        <tr><td style="text-align: left;"><label>Nombre:</label></td><td><input type="text" data-ng-model="newCity.name" required /></td></tr>
+        <tr><td style="text-align: left;"><label>Descripción:</label></td><td><input type="text" data-ng-model="newCity.description" required /></td></tr>
+        <tr><td style="text-align: left;"><label>Habilitada:</label></td><td><input type="checkbox" ng-model="newCity.enabled" required /></td></tr>
+        </table>
         <input type="submit" value="Agregar" data-ng-click="add()" data-ng-disabled="!addCity.$valid" class="btn btn-primary" />
         <input type="button" value="Cancelar" data-ng-click="toggleAdd()" class="btn btn-primary" />
         <br /><br />
@@ -42,22 +42,31 @@
 
         <tr data-ng-repeat="newCity in ciudades">
             <td>
-                <p data-ng-hide="editMode">{{ newCity.code }}</p>
-                <input data-ng-show="editMode" type="text" data-ng-model="newCity.code" />
+                <p data-ng-hide="mostrarCiudad($index)">{{ newCity.code }}</p>
+                <input data-ng-show="mostrarCiudad($index)" type="text" data-ng-model="newCity.code" />
             </td>
             <td>
-                <p data-ng-hide="editMode">{{ newCity.name }}</p>
-                <input data-ng-show="editMode" type="text" data-ng-model="newCity.name" />
+                <p data-ng-hide="mostrarCiudad($index)">{{ newCity.name }}</p>
+                <input data-ng-show="mostrarCiudad($index)" type="text" data-ng-model="newCity.name" />
             </td>
             <td>
-                <p data-ng-hide="editMode">{{ newCity.description }}</p>
-                <input data-ng-show="editMode" type="text" data-ng-model="newCity.description" />
+                <p data-ng-hide="mostrarCiudad($index)">{{ newCity.description }}</p>
+                <input data-ng-show="mostrarCiudad($index)" type="text" data-ng-model="newCity.description" />
             </td>
             <td>
-                <p data-ng-hide="editMode">{{ newCity.enabled }}</p>
-                <label data-ng-show="editMode">Habilitada:</label><input data-ng-show="editMode" type="checkbox" ng-model="newCity.enabled" required />
+                <p data-ng-hide="mostrarCiudad($index)">{{ newCity.enabled }}</p>
+                <label data-ng-show="mostrarCiudad($index)">Habilitada:</label><input data-ng-show="mostrarCiudad($index)" type="checkbox" ng-model="newCity.enabled" required />
             </td>
-            
+            <td>
+                <p data-ng-hide="mostrarCiudad($index)">
+                <a href="javascript:;" class="btn btn-sm btn-primary" data-ng-click="toggleEdit(newCity,$index)"><span class="fui-new"></span>&nbsp;&nbsp;Editar</a>
+                </p>
+                <p data-ng-show="mostrarCiudad($index)">
+                <a href="javascript:;" class="btn btn-sm btn-primary" data-ng-click="save(newCity)"><span class="fui-check-inverted"></span>&nbsp;&nbsp;Guardar</a>
+                <a href="javascript:;" class="btn btn-sm btn-primary" data-ng-click="toggleEdit(newCity,$index)"><span class="fui-cross-inverted"></span>&nbsp;&nbsp;Cancelar</a>
+                </p>
+            </td>
+
         </tr>
     </table>
     <hr />

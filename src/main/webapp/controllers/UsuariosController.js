@@ -6,6 +6,7 @@ luckynumbersApp.controller('UsuariosController', function ($scope, $filter, GetC
     $scope.ElUsuario = false;
     $scope.newUser = {};
     $scope.formError = false;
+    $scope.rowActual = 0;
 
 
 	GetUsers.get(function(data) {
@@ -18,9 +19,21 @@ luckynumbersApp.controller('UsuariosController', function ($scope, $filter, GetC
 	     {name:'Parametrizador', value:'ROLE_USER'}
 	   ];
 
-	$scope.toggleEdit = function (usuario) {
-	        $scope.ElUsuario = !$scope.ElUsuario; 
-	    };  
+	$scope.toggleEdit = function (usuario, index) {
+	        $scope.ElUsuario = !$scope.ElUsuario;
+	        $scope.rowActual = index;
+	    };
+
+	$scope.mostrarUsuario = function (index) {
+	        if (($scope.ElUsuario) & (index == $scope.rowActual)) {
+	        	return true;
+	        }
+	        else {
+	        	return false;
+	        }
+	    };
+
+
      $scope.toggleAdd = function () {  
 	        $scope.addMode = !$scope.addMode;  
 	    }; 

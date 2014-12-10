@@ -18,6 +18,7 @@ luckynumbersApp.config(function ($routeSegmentProvider, $httpProvider, USER_ROLE
         .when('/login', 'login')
         .when('/logout', 'logout')
         .when('/error', 'error')
+        .when('/invalido', 'invalido')
         .when('/intro', 'mintro')
         .when('/configuracion', 'mconfiguracion')
         .when('/usuarios', 'musuarios')
@@ -48,6 +49,9 @@ luckynumbersApp.config(function ($routeSegmentProvider, $httpProvider, USER_ROLE
         })
         .segment('error', {
             templateUrl: 'templates/error.html',
+        })
+        .segment('invalido', {
+            templateUrl: 'templates/invalidate.html',
         })
         .segment('logout', {
             templateUrl: 'templates/login.html',
@@ -90,6 +94,9 @@ httpHeaders = $httpProvider.defaults.headers;
                         authorizedRoles: [USER_ROLES.all]
                     };
                 pagesA["error"] = {
+                        authorizedRoles: [USER_ROLES.all]
+                    };
+                 pagesA["invalido"] = {
                         authorizedRoles: [USER_ROLES.all]
                     };
                 pagesA["mintro"] = {
@@ -154,8 +161,8 @@ httpHeaders = $httpProvider.defaults.headers;
 
                 // Call when the 403 response is returned by the server
                 $rootScope.$on('event:auth-notAuthorized', function(rejection) {
-                    $rootScope.errorMessage = 'errors.403';
-                    $location.path('/error').replace();
+                    $rootScope.errorMessage = true;
+                    $location.path('/invalido').replace();
                 });
 
                 // Call when the user logs out

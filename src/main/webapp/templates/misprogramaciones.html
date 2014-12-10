@@ -43,6 +43,7 @@
             <thead>
                 <tr>
                     <th><a href="" ng-click="reverse=!reverse;order('id', reverse)">id</a></th>
+                    <th>Nombre</th>
                     <th>Estado</th>
                     <th><a href="" ng-click="reverse=false;order('scheduledDate', false)">Fecha</a></th>
                     <th><a href="" ng-click="reverse=!reverse;order('totalTasks', reverse)">Tareas</a></th>
@@ -54,21 +55,21 @@
                 <tbody ng-repeat="programa in programaciones | filter:filterSeleccionado">
                 <tr id="{{programa.id}}">
                     <td>{{programa.id}}</td>
+                    <td>{{programa.name}}</td>
                     <td>{{friendlyState(programa.state)}}</td>
                     <td>{{programa.scheduledDate | date:'medium'}}</td>
                     <td>{{programa.totalTasks}}</td>
                     <td>{{programa.totalCoverage}}</td>
                     <td><a href="#" class="btn btn-xs btn-primary" ng-click="showSummaryLog(programa);"><span class="fui-document"></span>&nbsp;&nbsp;Sumario</a></td>
                     <td><a href="#" class="btn btn-xs btn-primary" data-toggle="tooltip" title="Detalles" ng-click="showDetalles(programa)"><span class="fui-info"></span></a>
-                    <a href="#" class="btn btn-xs btn-primary" ng-show="!(programa.state != 'NOT_STARTED')" data-toggle="tooltip" title="Cancelar ejecución" ng-click="openModal('¿Confirma eliminar?', programa)"><span class="fui-cross"></span></a>
-                    <a href="#" class="btn btn-xs btn-primary" data-toggle="tooltip" ng-show="!(programa.state != 'NOT_STARTED')" title="Reprogramar" ng-click="editDate(programa)"><span class="fui-calendar"></span></a>
-                    <a href="#" class="btn btn-xs btn-primary" data-toggle="tooltip" ng-show="!(programa.state != 'NOT_STARTED')" title="Ejecutar ahora" ng-click="playNow('¿Ejecutar inmediatamente?', programa)"><span class="fui-play"></span></a>
+                    <a href="#" class="btn btn-xs btn-primary" ng-show="soyAdmin(programa)" data-toggle="tooltip" title="Cancelar ejecución" ng-click="openModal('¿Confirma eliminar?', programa)"><span class="fui-cross"></span></a>
+                    <a href="#" class="btn btn-xs btn-primary" data-toggle="tooltip" ng-show="soyAdmin(programa)" title="Reprogramar" ng-click="editDate(programa)"><span class="fui-calendar"></span></a>
+                    <a href="#" class="btn btn-xs btn-primary" data-toggle="tooltip" ng-show="soyAdmin(programa)" title="Ejecutar ahora" ng-click="playNow('¿Ejecutar inmediatamente?', programa)"><span class="fui-play"></span></a>
                     </td>
                 </tr>
                 <tr>
                         <td colspan="7" style="background-color: #f3f8fb;">
                             <div ng-show="showDetails && (seleccionado.id == programa.id)">
-                            <p>{{programa.name}}</p>
                             <a href="#" ng-click="createTask();" class="btn btn-xs btn-primary"><span class="fui-plus"></span>&nbsp;&nbsp;Agregar Tarea</a>
                                <table class="table">
                                                <thead>
@@ -88,8 +89,8 @@
                                                    <td>{{tarea.to}}</td>
                                                    <td><a href="#" class="btn btn-xs btn-primary" ng-click="showSummaryTask(tarea);"><span class="fui-document"></span>&nbsp;&nbsp;Log</a>&nbsp;<a href="#" ng-click="showFileTask('In', tarea);" class="btn btn-xs btn-primary"><span class="fui-clip"></span>&nbsp;&nbsp;In</a>&nbsp;<a href="#"  ng-click="showFileTask('Out', tarea);"  class="btn btn-xs btn-primary"><span class="fui-clip"></span>&nbsp;&nbsp;Out</a></td>
                                                    <td>
-                                                   <a href="#" class="btn btn-xs btn-primary mlm" data-toggle="tooltip" ng-show="!(programa.state != 'NOT_STARTED')" title="Cancelar Tarea" ng-click="openDeleteTask('¿Eliminar Tarea?', $index)"><span class="fui-cross"></span></a>
-                                                   <a href="#" class="btn btn-xs btn-primary mlm" data-toggle="tooltip" title="Editar" ng-show="!(programa.state != 'NOT_STARTED')" ng-click="editRangos('Modifique los rangos', $index)"><span class="fui-new"></span></a>
+                                                   <a href="#" class="btn btn-xs btn-primary mlm" data-toggle="tooltip" ng-show="soyAdmin(programa)" title="Cancelar Tarea" ng-click="openDeleteTask('¿Eliminar Tarea?', $index)"><span class="fui-cross"></span></a>
+                                                   <a href="#" class="btn btn-xs btn-primary mlm" data-toggle="tooltip" title="Editar" ng-show="soyAdmin(programa)" ng-click="editRangos('Modifique los rangos', $index)"><span class="fui-new"></span></a>
                                                    </td>
                                                </tr>
                                </table>
@@ -186,7 +187,7 @@
         </div>
         <!-- ********************** -->
         <div ng-show="modal.showSummary">
-                <textarea rows="4" class="form-control">{{modal.jobSummary}}</textarea>
+                <textarea rows="4" class="form-control" readonly>{{modal.jobSummary}}</textarea>
         </div>
     </div>
 

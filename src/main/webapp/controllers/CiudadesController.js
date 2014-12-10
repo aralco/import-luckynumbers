@@ -5,6 +5,7 @@ luckynumbersApp.controller('CiudadesController', function ($scope, $filter, GetC
 	$scope.addMode = false;
 	$scope.editMode = false;
 	$scope.formError = false;
+	$scope.rowActual = false;
 	$scope.newCity = {};
 
 
@@ -12,12 +13,23 @@ luckynumbersApp.controller('CiudadesController', function ($scope, $filter, GetC
 		$scope.ciudades = data;
 	});
 
-	$scope.toggleEdit = function (city) {  
-		$scope.editMode = !$scope.editMode; 
-	};  
+	$scope.toggleEdit = function (city, index) {  
+		$scope.editMode = !$scope.editMode;
+		$scope.rowActual = index;
+	};
+
+	$scope.mostrarCiudad = function (index) {
+	        if (($scope.editMode) & (index == $scope.rowActual)) {
+	        	return true;
+	        }
+	        else {
+	        	return false;
+	        }
+	    };
+
 	$scope.toggleAdd = function () {  
 		$scope.addMode = !$scope.addMode;  
-	}; 
+	};
 
 	$scope.add = function () { 
 
@@ -49,11 +61,10 @@ luckynumbersApp.controller('CiudadesController', function ($scope, $filter, GetC
 
 	}
 
-
 	$scope.save = function(activo) {
 		var params = {Id:activo.id};
 		UpdateCity.post(params,activo);
 		$scope.data = function() { return GetCities.get(); }
-		$scope.editMode = !$scope.editMode; 
+		$scope.editMode = !$scope.editMode;
 	}
 });

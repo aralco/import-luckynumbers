@@ -1,4 +1,4 @@
-luckynumbersApp.controller('MisProgramacionesController', function ($scope, $filter, $location, Jobs, DeleteJob, ModifyJob, GetCities, NewTask, DeleteTask, UpdateTask, GetTaskFileIn, GetTaskFileOut) {
+luckynumbersApp.controller('MisProgramacionesController', function ($scope, $filter, $location, $rootScope, Account, Jobs, DeleteJob, ModifyJob, GetCities, NewTask, DeleteTask, UpdateTask, GetTaskFileIn, GetTaskFileOut) {
 
         $scope.success = null;
         $scope.error = null;
@@ -18,6 +18,10 @@ luckynumbersApp.controller('MisProgramacionesController', function ($scope, $fil
         $scope.totalJobs  = 0;
         $scope.tipoNumeros = "FROZEN";
         $scope.ciudad = 1;
+
+        Account.get(function(data) {
+            $scope.myRole =  data.role;
+        });
 
 
         GetCities.get(function(data) {
@@ -84,6 +88,13 @@ luckynumbersApp.controller('MisProgramacionesController', function ($scope, $fil
               if (state == "DONE") {
                            return "Finalizado";
                        }
+        }
+
+
+        $scope.soyAdmin = function(programa) {
+            if (($scope.myRole == "ROLE_ADMIN") & !(programa.state != 'NOT_STARTED')){
+              return true;
+            } else {return false}
         }
 
 
@@ -393,12 +404,12 @@ luckynumbersApp.controller('MisProgramacionesController', function ($scope, $fil
           if (inIs == "In") {
           GetTaskFileIn.get(params, function(data) {
              //$scope.modal.jobSummary = data.toString();
-             $scope.modal.jobSummary = data.join("\n");
+             $scope.modal.jobSummary = data.toString().split(",").join("\n");
            });
           } else {
             GetTaskFileOut.get(params, function(data) {
                //$scope.modal.jobSummary = data.toString();
-               $scope.modal.jobSummary = data.join("\n");
+               $scope.modal.jobSummary = data.toString().split(",").join("\n");
              });
           }
           $scope.funcionBorrar = null;

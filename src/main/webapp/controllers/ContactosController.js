@@ -5,15 +5,27 @@ luckynumbersApp.controller('ContactosController', function ($scope, $filter, Get
     $scope.editMode = false;
     $scope.newContact = {};
     $scope.formError = false;
+    $scope.rowActual = 0;
 
 
 	GetContacts.get(function(data) {
 	   $scope.contactos = data;
 	 });
 
-	$scope.toggleEdit = function (usuario) {  
-	        $scope.editMode = !$scope.editMode; 
+	$scope.toggleEdit = function (usuario, $index) {  
+	        $scope.editMode = !$scope.editMode;
+	        $scope.rowActual = index;
 	    };
+
+	$scope.mostrarContacto = function (index) {
+	            if (($scope.editMode) & (index == $scope.rowActual)) {
+	            	return true;
+	            }
+	            else {
+	            	return false;
+	            }
+	        };
+
      $scope.toggleAdd = function () {  
 	        $scope.addMode = !$scope.addMode;  
 	    };

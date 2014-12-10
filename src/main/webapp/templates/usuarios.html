@@ -19,18 +19,18 @@
    
     <form name="addFriend" data-ng-show="addMode" style="width:600px;margin:0px auto;">  
      <div class="dialog dialog-success">
-        <label>Nombre completo:</label><input type="text" data-ng-model="newUser.name" required />  <br />
-        <label>Nombre (login):</label><input type="text" data-ng-model="newUser.username" required />  <br />
-        <label>Rol:</label><select ng-model="newUser.role" ng-options="role.value as role.name for role in roles"></select><br />
-        <label>Descripcion:</label><input type="text" data-ng-model="newUser.description" required />  <br />
-        <label>E-mail:</label><input type="email" data-ng-model="newUser.email1" required />  <br />
-        <label>Teléfono:</label><input type="text" data-ng-model="newUser.phone1" required />  <br />
-        <label>Habilitado:</label><input type="checkbox" ng-model="newUser.enabled" required />  <br />
-        <br />
-        <br />
+     <table class="table table-striped table-hover">
+        <tr><td style="text-align: left;"><label>Nombre completo:</label></td><td><input type="text" data-ng-model="newUser.name" required /></td></tr>
+        <tr><td style="text-align: left;"><label>Nombre (login):</label></td><td><input type="text" data-ng-model="newUser.username" required /> </td></tr>
+        <tr><td style="text-align: left;"><label>Rol:</label></td><td><select ng-model="newUser.role" ng-options="role.value as role.name for role in roles"></select></td></tr> 
+        <tr><td style="text-align: left;"><label>Descripcion:</label></td><td><input type="text" data-ng-model="newUser.description" required /> </td></tr>
+        <tr><td style="text-align: left;"><label>E-mail:</label></td><td><input type="email" data-ng-model="newUser.email1" required /></td></tr>
+        <tr><td style="text-align: left;"><label>Teléfono:</label></td><td><input type="text" data-ng-model="newUser.phone1" required /></td></tr>
+        <tr><td style="text-align: left;"><label>Habilitado:</label></td><td><input type="checkbox" ng-model="newUser.enabled" required /> </td></tr>
+        </table>
         <input type="submit" value="Agregar" data-ng-click="add()" data-ng-disabled="!addFriend.$valid" class="btn btn-primary" />  
         <input type="button" value="Cancelar" data-ng-click="toggleAdd()" class="btn btn-primary" />  
-        <br /><br />  
+        <br /><br /> 
         </div>
     </form>  
 
@@ -47,43 +47,42 @@
         </tr>  
   
         <tr data-ng-repeat="newUser in usuarios">  
-            <td><strong data-ng-hide="ElUsuario">{{ newUser.id }}</strong></td>  
+            <td><strong data-ng-hide="mostrarUsuario($index)">{{ newUser.id }}</strong></td>  
             <td>  
-                <p data-ng-hide="ElUsuario">{{ newUser.name }}</p>  
-                <input data-ng-show="ElUsuario" type="text" data-ng-model="newUser.name" />  
+                <p data-ng-hide="mostrarUsuario($index)">{{ newUser.name }}</p>  
+                <input data-ng-show="mostrarUsuario($index)" type="text" data-ng-model="newUser.name" />  
             </td>  
             <td>  
-                <p data-ng-hide="ElUsuario">{{ newUser.username }}</p>  
-                <input data-ng-show="ElUsuario" type="text" data-ng-model="newUser.username" />  
+                <p data-ng-hide="mostrarUsuario($index)">{{ newUser.username }}</p>  
+                <input data-ng-show="mostrarUsuario($index)" type="text" data-ng-model="newUser.username" />  
             </td>  
             <td>  
-                <p data-ng-hide="ElUsuario">{{ newUser.role }}</p>
-                <select data-ng-show="ElUsuario" ng-model="newUser.role" ng-options="role.value as role.name for role in roles"></select>
+                <p data-ng-hide="mostrarUsuario($index)">{{ newUser.role }}</p>
+                <select data-ng-show="mostrarUsuario($index)" ng-model="newUser.role" ng-options="role.value as role.name for role in roles"></select>
             </td>  
             <td>  
-                <p data-ng-hide="ElUsuario">{{ newUser.description }}</p>  
-                <input data-ng-show="ElUsuario" type="text" data-ng-model="newUser.description" />  
+                <p data-ng-hide="mostrarUsuario($index)">{{ newUser.description }}</p>  
+                <input data-ng-show="mostrarUsuario($index)" type="text" data-ng-model="newUser.description" />  
             </td>  
             <td>  
-                <p data-ng-hide="ElUsuario">{{ newUser.email1 }}</p>  
-                <input data-ng-show="ElUsuario" type="text" data-ng-model="newUser.email1" />  
+                <p data-ng-hide="mostrarUsuario($index)">{{ newUser.email1 }}</p>  
+                <input data-ng-show="mostrarUsuario($index)" type="text" data-ng-model="newUser.email1" />  
             </td>  
             <td>  
-                <p data-ng-hide="ElUsuario">{{ newUser.phone1 }}</p>  
-                <input data-ng-show="ElUsuario" type="text" data-ng-model="newUser.phone1" />  
+                <p data-ng-hide="mostrarUsuario($index)">{{ newUser.phone1 }}</p>  
+                <input data-ng-show="mostrarUsuario($index)" type="text" data-ng-model="newUser.phone1" />  
             </td>  
             <td>  
-                <p data-ng-hide="ElUsuario">{{ newUser.enabled }}</p>  
-                <label data-ng-show="ElUsuario">Habilitado:</label><input data-ng-show="ElUsuario" type="checkbox" ng-model="newUser.enabled" required />
+                <p data-ng-hide="mostrarUsuario($index)">{{ newUser.enabled }}</p>  
+                <label data-ng-show="mostrarUsuario($index)">Habilitado:</label><input data-ng-show="mostrarUsuario($index)" type="checkbox" ng-model="newUser.enabled" required />
             </td>  
             <td>  
-                <p data-ng-hide="ElUsuario">
-                <a href="javascript:;" class="btn btn-sm btn-primary" data-ng-click="toggleEdit()"><span class="fui-new"></span>&nbsp;&nbsp;Editar</a>
+                <p data-ng-hide="mostrarUsuario($index)">
+                <a href="javascript:;" class="btn btn-sm btn-primary" data-ng-click="toggleEdit(newUser,$index)"><span class="fui-new"></span>&nbsp;&nbsp;Editar</a>
                 </p>
-                
-                <p data-ng-show="ElUsuario">
+                <p data-ng-show="mostrarUsuario($index)">
                 <a href="javascript:;" class="btn btn-sm btn-primary" data-ng-click="save(newUser)"><span class="fui-check-inverted"></span>&nbsp;&nbsp;Guardar</a>
-                <a href="javascript:;" class="btn btn-sm btn-primary" data-ng-click="toggleEdit()"><span class="fui-cross-inverted"></span>&nbsp;&nbsp;Cancelar</a>
+                <a href="javascript:;" class="btn btn-sm btn-primary" data-ng-click="toggleEdit(newUser,$index)"><span class="fui-cross-inverted"></span>&nbsp;&nbsp;Cancelar</a>
                 </p>
             </td>  
         </tr>  

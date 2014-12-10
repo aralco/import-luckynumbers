@@ -1,0 +1,16 @@
+<div ng-cloak>
+    <div class="row">
+        <div class="col-md-4">
+            <span class="hipster img-responsive img-rounded"></span>
+        </div>
+        <div class="col-md-8">
+            <h1 translate="errors.title">Operacion no permitida</h1>
+
+            <div ng-switch="authenticated" ng-show="errorMessage">
+                <div class="alert alert-success" ng-switch-when="true">
+                   Usted no tiene acceso a este módulo, por favor, pongase en contacto con el administrador del sistema.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
