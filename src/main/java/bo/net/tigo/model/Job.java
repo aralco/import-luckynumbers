@@ -35,10 +35,6 @@ public class Job {
     private Long unlockedNumbers;
     @JsonIgnore
     private Long lcNumbersInBccs;
-    @JsonIgnore
-    private Long diffReservedNumbers;
-    @JsonIgnore
-    private Long diffLockedNumbers;
     private String summary;
     @JsonSerialize(using=DateSerializer.class)
     private Date createdDate;
@@ -82,7 +78,7 @@ public class Job {
         this.lastUpdate = lastUpdate;
     }
 
-    public Job(Long id, String name, String description, Date scheduledDate, Boolean now, String state, String owner, Integer totalTasks, Integer passedTasks, Integer failedTasks, String totalCoverage, Long lnNumbersInBccs, Long reservedLuckyNumbers, Long rolledBackNumbers, Long unlockedNumbers, Long lcNumbersInBccs, Long diffReservedNumbers, Long diffLockedNumbers, String summary, Date createdDate, Date lastUpdate, Set<Task> tasks) {
+    public Job(Long id, String name, String description, Date scheduledDate, Boolean now, String state, String owner, Integer totalTasks, Integer passedTasks, Integer failedTasks, String totalCoverage, Long lnNumbersInBccs, Long reservedLuckyNumbers, Long rolledBackNumbers, Long unlockedNumbers, Long lcNumbersInBccs, String summary, Date createdDate, Date lastUpdate, Set<Task> tasks) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -99,8 +95,6 @@ public class Job {
         this.rolledBackNumbers = rolledBackNumbers;
         this.unlockedNumbers = unlockedNumbers;
         this.lcNumbersInBccs = lcNumbersInBccs;
-        this.diffReservedNumbers = diffReservedNumbers;
-        this.diffLockedNumbers = diffLockedNumbers;
         this.summary = summary;
         this.createdDate = createdDate;
         this.lastUpdate = lastUpdate;
@@ -236,22 +230,6 @@ public class Job {
 
     public void setLcNumbersInBccs(Long lcNumbersInBccs) {
         this.lcNumbersInBccs = lcNumbersInBccs;
-    }
-
-    public Long getDiffReservedNumbers() {
-        return diffReservedNumbers;
-    }
-
-    public void setDiffReservedNumbers(Long diffReservedNumbers) {
-        this.diffReservedNumbers = diffReservedNumbers;
-    }
-
-    public Long getDiffLockedNumbers() {
-        return diffLockedNumbers;
-    }
-
-    public void setDiffLockedNumbers(Long diffLockedNumbers) {
-        this.diffLockedNumbers = diffLockedNumbers;
     }
 
     public String getSummary() {

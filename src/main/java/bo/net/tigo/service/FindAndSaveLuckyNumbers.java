@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -42,11 +43,12 @@ public class FindAndSaveLuckyNumbers {
                 boolean taskCompletedOK=true;
                 StringBuilder errorCause = new StringBuilder("Causa del error: ||");
                 logger.info("Looking for lucky numbers on task:"+task.getId());
-                long reservedLuckyNumbers=0;
+                List<String> reservedNumberList = new ArrayList<String>(0);
                 long rolledBackNumbers=0;
                 long lockedNumbersInBccs=0;
                 long reservedNumbersInBccs=0;
                 long unlockedNumbers=0;
+                long diffReservedNumbers=0;
                 float taskPercentage=100;
                 StringBuilder taskLog = new StringBuilder();
                 Date currentDate = calendar.getTime();
@@ -59,7 +61,7 @@ public class FindAndSaveLuckyNumbers {
                         if(message!=null && message.contains("OK"))  {
                             logger.info("Lucky Number has been correctly reserved on BCCS:"+message);
                             outAudit.setLuckyReserved(true);
-                            reservedLuckyNumbers++;
+                            reservedNumberList.add(outAudit.getNumber());
                         } else  {
                             logger.info("Lucky Number "+outAudit.getNumber()+" canNOT been reserved on BCCS, calling rollback CONCILI_RESERVE_LUCKY_BCCS:"+message);
                             taskLog.append("Lucky Number ").append(outAudit.getNumber()).append(" no pudo ser reservado en BCCS, haciendo Rollback.").append(" ||");
@@ -79,24 +81,28 @@ public class FindAndSaveLuckyNumbers {
                     }
 
                 }
-                taskLog.append("Total de Números Lucky reservados en BCCS: ").append(reservedLuckyNumbers).append(" ||");
+                taskLog.append("Total de Números Lucky reservados en BCCS: ").append(reservedNumberList.size()).append(" ||");
                 //CONCILIATION: Call BCCS to ask for numbers with state LN, call only if lucky numbers were reserved
-                if(task.getPassed()>0 && reservedLuckyNumbers>0)  {
-                    logger.info("Conciliation of LuckyNumbers: Calling BCCS:SP1_LNROSLNXSUCURSALNRODESDEHASTA to ask for LN numbers using values:city="+task.getCity()+",from="+task.getFrom()+",to="+task.getTo());
-                    List<InAudit> reservedNumbers = bccsDao.getReservedNumbers(task.getCity(), task.getFrom(), task.getTo());
-                    if(reservedNumbers!=null) {
-                        if(reservedNumbers.size()!=reservedLuckyNumbers) {
-                            taskCompletedOK = false;
+                if(task.getPassed()>0 && reservedNumberList.size()>0)  {
+                    logger.info("Conciliation of LuckyNumbers: Calling BCCS:SP1_LNROSLNXSUCURSALNRODESDEHASTA to ask for LN numbers using values:city="+
+                            task.getCity()+",from="+task.getFrom()+",to="+task.getTo());
+                    List<String> reservedNumbers = bccsDao.getReservedNumbers(task.getCity(), task.getFrom(), task.getTo());
+                    if(task.getPassed()!=reservedNumberList.size() || reservedNumbers.size()!=reservedNumberList.size()) {
+                        diffReservedNumbers = Math.abs(reservedNumbers.size()-reservedNumberList.size());
+                        if(!reservedNumbers.containsAll(reservedNumberList))    {
+                            taskCompletedOK=false;
                             errorCause.append("La cantidad de números con estado LN en BCCS es diferente a la cantidad de números lucky en Lucky_Number. ||");
                         }
-                        reservedNumbersInBccs=reservedNumbers.size();
-                        logger.info("Conciliation of LuckyNumbers: LuckyNumbers in BCCS: "+reservedNumbers.size()+" -VS- LuckyNumbers in LUCKY_NUMBERS:"+task.getPassed());
-                        taskLog.append("Conciliación de LuckyNumbers: || LuckyNumbers en BCCS: ").append(reservedNumbers.size()).append(" || LuckyNumbers en LUCKY_NUMBERS:").append(task.getPassed()).append(" ||");
-                    } else  {
-                        taskCompletedOK=false;
-                        logger.info("Conciliation of LuckyNumbers: LN Numbers in BCCS seems to be empty.");
-                        taskLog.append("Conciliation of LuckyNumbers: LN Numbers in BCCS seems to be empty. ||");
                     }
+                    reservedNumbersInBccs=reservedNumberList.size();
+                    taskLog.append("Conciliación de LuckyNumbers: || ");
+                    if(diffReservedNumbers>0)
+                        taskLog.append("LuckyNumbers en BCCS: ").append(reservedNumbers.size()).append(" || ")
+                                .append("(").append(diffReservedNumbers).append(" números con estado LN en BCCS descartados.) ||");
+                    taskLog.append("LuckyNumbers en BCCS: ").append(reservedNumbersInBccs).append(" || LuckyNumbers en LUCKY_NUMBERS:")
+                            .append(task.getPassed()).append(" ||");
+                    logger.info("Conciliation of LuckyNumbers: LuckyNumbers in BCCS: "+reservedNumbersInBccs+" -VS- LuckyNumbers in LUCKY_NUMBERS:"+
+                            task.getPassed());
                 } else {
                     logger.info("No Lucky Numbers found on processed file");
                 }
@@ -104,36 +110,21 @@ public class FindAndSaveLuckyNumbers {
                 //Call to BCCS to change state of numbers from LC(locked) to LI(free), call only for FREE numbers
                 if(task.getType().equals(Type.FREE.name())) {
                     logger.info("Unlock free numbers on BCCS, calling :SP2_LNROSLCXSUCURSALNRODESDEHASTAPORC_ACTESTLI1 to unlock numbers using values:city="+task.getCity()+",from="+task.getFrom()+",to="+task.getTo());
-                    List<InAudit> unlockedNumberList = bccsDao.unlockNumbers(task.getCity(),task.getFrom(),task.getTo());
-                    if(unlockedNumberList!=null)   {
-                        if(!(unlockedNumberList.size()>0))  {
-                            taskCompletedOK=false;
-                            errorCause.append("La cantidad de números que cambiaron a estado LI en BCCS es incorrecta. Cantidad: ").append(unlockedNumberList.size()).append(" ||");
-                        }
-                        unlockedNumbers=unlockedNumberList.size();
-                        logger.info("Total unlockedNumbers on BCCS: "+unlockedNumberList.size());
-                        taskLog.append("Total números desbloqueados en BCCS: ").append(unlockedNumberList.size()).append(" ||");
-                    } else  {
-                        taskCompletedOK=false;
-                        logger.info("Total unlockedNumbers on BCCS seems to be empty.");
-                        taskLog.append("Total unlockedNumbers on BCCS seems to be empty. ||");
-                    }
+                    List<String> unlockedNumberList = bccsDao.unlockNumbers(task.getCity(),task.getFrom(),task.getTo());
+                    unlockedNumbers=unlockedNumberList.size();
+                    logger.info("Total unlockedNumbers on BCCS: "+unlockedNumberList.size());
+                    taskLog.append("Total números desbloqueados en BCCS: ").append(unlockedNumberList.size()).append(" ||");
+
                     //CONCILIATION: Call to BCCS to ask for LC(locked) numbers after unlocking, call only for FREE numbers
                     logger.info("Conciliation of locked numbers on BCCS: Calling BCCS:SP1_LNROSLCXSUCURSALNRODESDEHASTA to list unlocked numbers using values:city="+task.getCity()+",from="+task.getFrom()+",to="+task.getTo());
-                    List<InAudit> lockedNumbers = bccsDao.getLockedNumbers(task.getCity(), task.getFrom(), task.getTo());
-                    if(lockedNumbers!=null)  {
-                        if(lockedNumbers.size()>0)  {
-                            errorCause.append("La cantidad de números con estado LC en BCCS es incorrecta. Cantidad:").append(lockedNumbers.size()).append(" ||");
-                            taskCompletedOK=false;
-                        }
-                        lockedNumbersInBccs=lockedNumbers.size();
-                        logger.info("Conciliation for unlocked numbers with LC state in BCCS:"+lockedNumbers.size());
-                        taskLog.append("Total de números bloqueados en BCCS:").append(lockedNumbers.size()).append(" ||");
-                    }
-                    else    {
+                    List<String> lockedNumbers = bccsDao.getLockedNumbers(task.getCity(), task.getFrom(), task.getTo());
+                    lockedNumbersInBccs=lockedNumbers.size();
+                    logger.info("Conciliation for unlocked numbers with LC state in BCCS:"+lockedNumbers.size());
+                    taskLog.append("Total de números bloqueados en BCCS:").append(lockedNumbers.size()).append(" ||");
+
+                    if(lockedNumbers.size()>0)  {
                         taskCompletedOK=false;
-                        logger.info("LC Numbers in BCCS seems to be empty.");
-                        taskLog.append("LC Numbers in BCCS seems to be empty. ||");
+                        errorCause.append("La cantidad de números bloqueados en BCCS es mayor a 0. Cantidad:").append(lockedNumbers.size()).append(" ||");
                     }
 
                 }
@@ -154,6 +145,8 @@ public class FindAndSaveLuckyNumbers {
                 task.setRolledBackNumbers(rolledBackNumbers);
                 task.setUnlockedNumbers(unlockedNumbers);
                 task.setLcNumbersInBccs(lockedNumbersInBccs);
+                task.setDiffReservedNumbers(diffReservedNumbers);
+
 
                 task.setCoverage(taskPercentage+"%");
                 task.setLastUpdate(currentDate);
@@ -188,14 +181,14 @@ public class FindAndSaveLuckyNumbers {
                         "Total de archivos .in creados: "+(inFiles==null?0:inFiles)+" ||"+
                         "Total de archivos .out creados: "+(outFiles==null?0:outFiles)+" ||"+
                         "--------------------------------------------------------------- ||"+
-                        "Total de Números con estado LN en BCCS: "+job.getLnNumbersInBccs()+" ||"+
+                        "Total de Números Lucky en BCCS: "+job.getLnNumbersInBccs()+" ||"+
                         "Total de Números Lucky en Lucky_Number: "+job.getReservedLuckyNumbers()+" ||"+
                         "--------------------------------------------------------------- ||"+
                         "Total de Números con rollback: "+job.getRolledBackNumbers()+" ||"+
                         "--------------------------------------------------------------- ||"+
                         "Total de Números desbloqueados en BCCS: "+job.getUnlockedNumbers()+" ||"+
                         "--------------------------------------------------------------- ||"+
-                        "Total de Números con estado LC en BCCS: "+job.getLcNumbersInBccs()+" ||";
+                        "Total de Números bloqueados en BCCS: "+job.getLcNumbersInBccs()+" ||";
 
                 job.setSummary(jobSummary);
                 job.setLastUpdate(currentDate);
@@ -206,6 +199,6 @@ public class FindAndSaveLuckyNumbers {
         } else  {
             logger.info("No startedPhase2Tasks tasks to execute:" + startedPhase2Tasks.size());
         }
-
     }
+
 }

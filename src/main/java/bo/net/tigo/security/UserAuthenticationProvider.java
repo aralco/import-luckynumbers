@@ -68,6 +68,11 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 //                logger.info("User successfully authenticated - authenticate:"+usernamePasswordAuthenticationToken);
 //                auditService.audit(Action.AUTENTICACION);
 //                return usernamePasswordAuthenticationToken;
+//            } else if(authentication.getPrincipal().equals("admin")&& authentication.getCredentials().equals("admin")) {
+//                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(authentication.getPrincipal(), authentication.getCredentials(), userDetails.getAuthorities());
+//                logger.info("User successfully authenticated - authenticate:"+usernamePasswordAuthenticationToken);
+//                auditService.audit(Action.AUTENTICACION);
+//                return usernamePasswordAuthenticationToken;
             } else {
                 throw new BadCredentialsException("Credenciales de acceso no válidas.");
             }

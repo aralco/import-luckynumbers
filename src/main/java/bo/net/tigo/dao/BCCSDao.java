@@ -19,6 +19,7 @@ import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -114,12 +115,10 @@ public class BCCSDao {
                     new SqlParameter(NRO_DESDE, Types.VARCHAR),
                     new SqlParameter(NRO_HASTA, Types.VARCHAR)
                 )
-                .returningResultSet(UNLOCKED_NUMBERS, new RowMapper<InAudit>() {
+                .returningResultSet(UNLOCKED_NUMBERS, new RowMapper<String>() {
                     @Override
-                    public InAudit mapRow(ResultSet resultSet, int i) throws SQLException {
-                        InAudit inAudit = new InAudit();
-                        inAudit.setRow(resultSet.getString(1));
-                        return inAudit;
+                    public String mapRow(ResultSet resultSet, int i) throws SQLException {
+                        return resultSet.getString(1);
                     }
                 });
 
@@ -131,12 +130,10 @@ public class BCCSDao {
                         new SqlParameter(NRO_DESDE, Types.VARCHAR),
                         new SqlParameter(NRO_HASTA, Types.VARCHAR)
                 )
-                .returningResultSet(LOCKED_NUMBERS, new RowMapper<InAudit>() {
+                .returningResultSet(LOCKED_NUMBERS, new RowMapper<String>() {
                     @Override
-                    public InAudit mapRow(ResultSet resultSet, int i) throws SQLException {
-                        InAudit inAudit = new InAudit();
-                        inAudit.setRow(resultSet.getString(1));
-                        return inAudit;
+                    public String mapRow(ResultSet resultSet, int i) throws SQLException {
+                        return resultSet.getString(1);
                     }
                 });
 
@@ -148,12 +145,10 @@ public class BCCSDao {
                         new SqlParameter(NRO_DESDE, Types.VARCHAR),
                         new SqlParameter(NRO_HASTA, Types.VARCHAR)
                 )
-                .returningResultSet(RESERVED_NUMBERS, new RowMapper<InAudit>() {
+                .returningResultSet(RESERVED_NUMBERS, new RowMapper<String>() {
                     @Override
-                    public InAudit mapRow(ResultSet resultSet, int i) throws SQLException {
-                        InAudit inAudit = new InAudit();
-                        inAudit.setRow(resultSet.getString(1));
-                        return inAudit;
+                    public String mapRow(ResultSet resultSet, int i) throws SQLException {
+                        return resultSet.getString(1);
                     }
                 });
 
@@ -193,7 +188,7 @@ public class BCCSDao {
     }
 
     @SuppressWarnings("unchecked")
-    public List<InAudit> unlockNumbers(int city, String from, String to)    {
+    public List<String> unlockNumbers(int city, String from, String to)    {
         SqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue(SUCURSAL, city)
                 .addValue(NRO_DESDE, from)
@@ -201,11 +196,11 @@ public class BCCSDao {
         Map out = unlockNumbersProc
                 .execute(parameterSource);
         logger.info("unlockNumbers::result="+out.get("unlockedNumbers"));
-        return (List<InAudit>)out.get(UNLOCKED_NUMBERS);
+        return unWrap((List<String>) out.get(UNLOCKED_NUMBERS));
     }
 
     @SuppressWarnings("unchecked")
-    public List<InAudit> getLockedNumbers(int city, String from, String to)    {
+    public List<String> getLockedNumbers(int city, String from, String to)    {
         SqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue(SUCURSAL, city)
                 .addValue(NRO_DESDE, from)
@@ -213,11 +208,11 @@ public class BCCSDao {
         Map out = lockedNumbersProc
                 .execute(parameterSource);
         logger.info("getLockedNumbers::result="+out.get(LOCKED_NUMBERS));
-        return (List<InAudit>)out.get(LOCKED_NUMBERS);
+        return unWrap((List<String>)out.get(LOCKED_NUMBERS));
     }
 
     @SuppressWarnings("unchecked")
-    public List<InAudit> getReservedNumbers(int city, String from, String to)    {
+    public List<String> getReservedNumbers(int city, String from, String to)    {
         SqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue(SUCURSAL, city)
                 .addValue(NRO_DESDE, from)
@@ -225,7 +220,17 @@ public class BCCSDao {
         Map out = reservedNumbersProc
                 .execute(parameterSource);
         logger.info("getReservedNumbers::result="+out.get(RESERVED_NUMBERS));
-        return (List<InAudit>)out.get(RESERVED_NUMBERS);
+        return unWrap((List<String>)out.get(RESERVED_NUMBERS));
+    }
+
+    private List<String> unWrap(List<String> inputList)  {
+        List<String> outputList = new ArrayList<String>(0);
+        String fields[];
+        for(String input : inputList) {
+            fields = input.split(",");
+            outputList.add(fields[0]);
+        }
+        return outputList;
     }
 
 }

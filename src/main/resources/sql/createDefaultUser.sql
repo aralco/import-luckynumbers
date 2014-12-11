@@ -12,7 +12,7 @@ INSERT INTO "IMPORTLUCKY"."ILN_USER"
 	"ILN_USER_USERNAME",
 	"ILN_USER_ROLE") VALUES (
 	ILN_USER_SEQ_ID.NEXTVAL,
-	'Usuario administrador Admin',
+	'Usuario administrador admin',
 	'admin@email.com',
 	'admin@email.com',
 	'77960969',
