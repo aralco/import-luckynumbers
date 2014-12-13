@@ -2,8 +2,6 @@ package bo.net.tigo.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 
 import java.util.Date;
 
@@ -16,7 +14,7 @@ public class Task {
     private Integer city;
     private String from;
     private String to;
-    @JsonSerialize(using=DateSerializer.class)
+    @JsonIgnore
     private Date executionDate;  //yyyy-MM-ddThh:mm:ss±hh:mm; e.g. 2014-11-05T12:54:00-04:00
     private String status; //{SCHEDULED, STARTED, COMPLETED_PHASE1_OK,COMPLETED_PHASE1_WITH_ERRORS, COMPLETED_OK, COMPLETED_WITH_ERRORS}
     private Integer processed;
@@ -38,9 +36,9 @@ public class Task {
     private Long lcNumbersInBccs;
     @JsonIgnore
     private Long diffReservedNumbers;
-    @JsonSerialize(using=DateSerializer.class)
+    @JsonIgnore
     private Date createdDate;
-    @JsonSerialize(using=DateSerializer.class)
+    @JsonIgnore
     private Date lastUpdate;
     @JsonBackReference
     private Job job;

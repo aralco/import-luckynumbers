@@ -1,7 +1,6 @@
 package bo.net.tigo.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.DateSerializer;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Date;
 
@@ -18,9 +17,9 @@ public class User {
     private String phone2;
     private String phone3;
     private String description;
-    @JsonSerialize(using=DateSerializer.class)
+    @JsonIgnore
     private Date createdDate;
-    @JsonSerialize(using=DateSerializer.class)
+    @JsonIgnore
     private Date lastUpdate;
     private Boolean enabled;
     private String username; //must be the same AD username

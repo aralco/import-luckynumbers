@@ -27,22 +27,21 @@ public class SecurityUtils {
     }
 
     public static String getCurrentUsername()  {
-        //DEV MODE
-//        logger.info("Authenticate:SecurityContextHolder.getContext().getAuthentication()="+SecurityContextHolder.getContext().getAuthentication());
-//        logger.info("AuthenticateSecurityContextHolder.getContext().getAuthentication().getPrincipal()="+SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-//        logger.info("AuthenticateSecurityContextHolder.getContext().getAuthentication().getPrincipal()="+SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-//        logger.info("Authenticate=SecurityContextHolder.getContext().getAuthentication().getCredentials()="+SecurityContextHolder.getContext().getAuthentication().getCredentials());
-//        logger.info("Authenticate=SecurityContextHolder.getContext().getAuthentication().getAuthorities()="+SecurityContextHolder.getContext().getAuthentication().getAuthorities());
-//        logger.info("Authenticate=SecurityContextHolder.getContext().getAuthentication().getDetails()="+SecurityContextHolder.getContext().getAuthentication().getDetails());
-//        return SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
 
-        //PROD MODE
+        logger.info("Authenticate:SecurityContextHolder.getContext().getAuthentication()="+SecurityContextHolder.getContext().getAuthentication());
+        logger.info("AuthenticateSecurityContextHolder.getContext().getAuthentication().getPrincipal()="+SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        logger.info("Authenticate=SecurityContextHolder.getContext().getAuthentication().getCredentials()="+SecurityContextHolder.getContext().getAuthentication().getCredentials());
+        logger.info("Authenticate=SecurityContextHolder.getContext().getAuthentication().getAuthorities()="+SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+        logger.info("Authenticate=SecurityContextHolder.getContext().getAuthentication().getDetails()="+SecurityContextHolder.getContext().getAuthentication().getDetails());
+
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username;
         if (principal instanceof UserDetails) {
             username = ((UserDetails)principal).getUsername();
+        } else if(principal instanceof String) {
+            username = principal.toString();
         } else
-            throw new UsernameNotFoundException("User doesn't exist.");
+            throw new UsernameNotFoundException("El usuario no existe.");
         return username;
 
     }

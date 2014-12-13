@@ -33,7 +33,7 @@ public class SchedulerResource {
     @ResponseBody
     public ResponseEntity<Job> createJob(@RequestBody @Valid JobRequest jobRequest) {
         if(jobRequest==null)
-            throw new LuckyNumbersGenericException(HttpStatus.BAD_REQUEST.toString(),"Job Request cannot be null");
+            throw new LuckyNumbersGenericException(HttpStatus.BAD_REQUEST.toString(),"Los datos de programación no son correctos.");
         logger.info("createJob:"+jobRequest.toString());
         Job job = schedulerService.createJob(jobRequest);
         return new ResponseEntity<Job>(job, HttpStatus.CREATED);
@@ -45,7 +45,7 @@ public class SchedulerResource {
         Job job = schedulerService.getJob(jobId);
         logger.info("viewJob:"+job);
         if(job==null)
-            throw new LuckyNumbersGenericException(HttpStatus.NOT_FOUND.toString(),"Job cannot be found");
+            throw new LuckyNumbersGenericException(HttpStatus.NOT_FOUND.toString(),"La programación no pudo ser encontrada.");
         return new ResponseEntity<Job>(job, HttpStatus.OK);
     }
 
@@ -80,7 +80,7 @@ public class SchedulerResource {
         Task task = schedulerService.getTask(taskId);
         logger.info("viewTask:"+task);
         if(task==null)
-            throw new LuckyNumbersGenericException(HttpStatus.NOT_FOUND.toString(),"Task cannot be found");
+            throw new LuckyNumbersGenericException(HttpStatus.NOT_FOUND.toString(),"La tarea no pudo ser encontrada.");
         return new ResponseEntity<Task>(task, HttpStatus.OK);
     }
 

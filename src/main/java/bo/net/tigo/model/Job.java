@@ -36,9 +36,9 @@ public class Job {
     @JsonIgnore
     private Long lcNumbersInBccs;
     private String summary;
-    @JsonSerialize(using=DateSerializer.class)
+    @JsonIgnore
     private Date createdDate;
-    @JsonSerialize(using=DateSerializer.class)
+    @JsonIgnore
     private Date lastUpdate;
     @JsonManagedReference
     private Set<Task> tasks;

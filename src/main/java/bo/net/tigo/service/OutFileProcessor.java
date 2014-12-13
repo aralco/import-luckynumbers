@@ -59,16 +59,16 @@ public class OutFileProcessor {
             logger.info("Filename to Process:"+fileName);
             boolean goodFileToProcess = Pattern.matches("[0-9]{8}_[0-9]{6}\\.out", fileName);
             if(!goodFileToProcess)    {
-                throw new LuckyNumbersGenericException(HttpStatus.PRECONDITION_FAILED.toString(),"Filename:"+fileName+" to be processed is not valid.");
+                throw new LuckyNumbersGenericException(HttpStatus.PRECONDITION_FAILED.toString(),"El archivo:"+fileName+"  a ser procesado no es válido.");
             }
 
             String shortFilename = fileName.substring(0,15);
             logger.info("array Size:"+shortFilename.length()+",values:"+shortFilename);
             Task task = taskDao.findByFileName(shortFilename);
             if(task==null)  {
-                throw new LuckyNumbersGenericException(HttpStatus.NOT_FOUND.toString(),"Related task for filename:"+fileName+" cannot be found or task doesn't exist yet.");
+                throw new LuckyNumbersGenericException(HttpStatus.NOT_FOUND.toString(),"La tarea relacionada con el archivo:"+fileName+" no pudo ser encontrada o la tarea aún no existe.");
             } else if(task.getUrlout()!=null) {
-                throw new LuckyNumbersGenericException(HttpStatus.CONFLICT.toString(),"Related task for filename:"+fileName+ " might already been processed. TaskId="+task.getId());
+                throw new LuckyNumbersGenericException(HttpStatus.CONFLICT.toString(),"La tarea relacionada con el archivo:"+fileName+ " ya fue procesada. Id de Tarea="+task.getId());
             }
             List<OutAudit> outAuditList = new ArrayList<OutAudit>(0);
             while ((line = bufferedReader.readLine()) != null) {

@@ -1,5 +1,7 @@
 package bo.net.tigo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Date;
 
 /**
@@ -16,7 +18,9 @@ public class OutAudit {
     private String fileName;
     private Long taskId;
     private Long jobId;
+    @JsonIgnore
     private Date createdDate;
+    @JsonIgnore
     private Date lastUpdate;
 
     public OutAudit(Long id, String row, String number, Boolean luckyReserved, Integer codePassed, String codeFailed, String message, String fileName, Long taskId, Long jobId, Date createdDate, Date lastUpdate) {

@@ -37,12 +37,15 @@ public class SchedulerService {
     public Job createJob(JobRequest jobRequest) {
         logger.info("createJob:"+jobRequest);
         auditService.audit(Action.CREAR_PROGRAMACION);
-        Date creationDate = new Date();
+        Date currentDate = Calendar.getInstance().getTime();
         Job job = new Job();
         job.setName(jobRequest.getName());
         job.setDescription(jobRequest.getDescription());
-        if(jobRequest.getNow())
-            job.setScheduledDate(creationDate);
+        if(jobRequest.getNow()) {
+            job.setScheduledDate(currentDate);
+            if(jobRequest.getTasks().isEmpty())
+                throw new LuckyNumbersGenericException(HttpStatus.BAD_REQUEST.toString(),"La programación debe tener por lo menos una tarea registrada.");
+        }
         else
             job.setScheduledDate(jobRequest.getScheduledDate());
         job.setNow(jobRequest.getNow());
@@ -56,7 +59,7 @@ public class SchedulerService {
         job.setFailedTasks(0);
         job.setTotalCoverage("0%");
         job.setSummary("");
-        job.setCreatedDate(creationDate);
+        job.setCreatedDate(currentDate);
         jobDao.save(job);
 
         Set<Task> tasks = new HashSet<Task>(0);
@@ -74,7 +77,7 @@ public class SchedulerService {
             task.setJob(job);
             task.setSummary("");
             task.setCoverage("0%");
-            task.setCreatedDate(creationDate);
+            task.setCreatedDate(currentDate);
             taskDao.save(task);
             tasks.add(task);
         }
@@ -92,7 +95,7 @@ public class SchedulerService {
         logger.info("updateJob:job="+job);
         auditService.audit(Action.EDITAR_PROGRAMACION);
         if(!job.getState().equals(State.NOT_STARTED.name()))
-            throw new LuckyNumbersGenericException(HttpStatus.PRECONDITION_FAILED.toString(),"Related Job must have NOT_STARTED state");
+            throw new LuckyNumbersGenericException(HttpStatus.PRECONDITION_FAILED.toString(),"La programación relacionada debe tener estado No iniciado.");
         Date currentDate = Calendar.getInstance().getTime();
         if(job.getNow())
             job.setScheduledDate(currentDate);
@@ -111,10 +114,10 @@ public class SchedulerService {
         auditService.audit(Action.ELIMINAR_PROGRAMACION);
         Job job = jobDao.findOne(jobId);
         if(job==null)   {
-            throw new LuckyNumbersGenericException(HttpStatus.NOT_FOUND.toString(),"Related Job cannot be found");
+            throw new LuckyNumbersGenericException(HttpStatus.NOT_FOUND.toString(),"La programación relacionada no pudo ser encontrada.");
         }
         if(!job.getState().equals(State.NOT_STARTED.name()))   {
-            throw new LuckyNumbersGenericException(HttpStatus.PRECONDITION_FAILED.toString(),"Related Job must have NOT_STARTED state");
+            throw new LuckyNumbersGenericException(HttpStatus.PRECONDITION_FAILED.toString(),"La programación relacionada debe tener estado No iniciado.");
         }
         jobDao.delete(job);
     }
@@ -124,10 +127,10 @@ public class SchedulerService {
         auditService.audit(Action.CREAR_TAREA);
         Job job = jobDao.findOne(jobId);
         if(job==null)   {
-            throw new LuckyNumbersGenericException(HttpStatus.NOT_FOUND.toString(),"Related Job cannot be found");
+            throw new LuckyNumbersGenericException(HttpStatus.NOT_FOUND.toString(),"La programación relacionada no pudo ser encontrada.");
         }
         if(!job.getState().equals(State.NOT_STARTED.name()))   {
-            throw new LuckyNumbersGenericException(HttpStatus.PRECONDITION_FAILED.toString(),"Related Job must have NOT_STARTED state");
+            throw new LuckyNumbersGenericException(HttpStatus.PRECONDITION_FAILED.toString(),"La programación relacionada debe tener estado No iniciado.");
         }
         Task task = new Task();
         task.setType(taskRequest.getType());
@@ -156,11 +159,19 @@ public class SchedulerService {
     @Transactional
     public Task updateTask(Task task) {
         auditService.audit(Action.EDITAR_TAREA);
-        if(!task.getStatus().equals(Status.SCHEDULED.name()))
-            throw new LuckyNumbersGenericException(HttpStatus.PRECONDITION_FAILED.toString(),"Related Task must have NOT_SCHEDULED status");
-        Date currentDate = new Date();
-        task.setLastUpdate(currentDate);
-        taskDao.update(task);
+        Task persistedTask = taskDao.findOne(task.getId());
+        if(persistedTask==null)   {
+            throw new LuckyNumbersGenericException(HttpStatus.NOT_FOUND.toString(),"La tarea relacionada no pudo ser encontrada.");
+        }
+        if(!persistedTask.getStatus().equals(Status.SCHEDULED.name()))
+            throw new LuckyNumbersGenericException(HttpStatus.PRECONDITION_FAILED.toString(),"La programación relacionada debe tener estado No iniciado.");
+        Date currentDate = Calendar.getInstance().getTime();
+        persistedTask.setType(task.getType());
+        persistedTask.setCity(task.getCity());
+        persistedTask.setFrom(task.getFrom());
+        persistedTask.setTo(task.getTo());
+        persistedTask.setLastUpdate(currentDate);
+        taskDao.update(persistedTask);
         return task;
     }
 
@@ -169,9 +180,9 @@ public class SchedulerService {
         auditService.audit(Action.ELIMINAR_TAREA);
         Task task = taskDao.findOne(taskId);
         if(task==null)
-            throw new LuckyNumbersGenericException(HttpStatus.NOT_FOUND.toString(),"Related Task cannot be found");
+            throw new LuckyNumbersGenericException(HttpStatus.NOT_FOUND.toString(),"La tarea relacionada no pudo ser encontrada.");
         if(!task.getStatus().equals(Status.SCHEDULED.name()))
-            throw new LuckyNumbersGenericException(HttpStatus.PRECONDITION_FAILED.toString(),"Related Task must have NOT_SCHEDULED status");
+            throw new LuckyNumbersGenericException(HttpStatus.PRECONDITION_FAILED.toString(),"La programación relacionada debe tener estado No iniciado.");
         Job job = task.getJob();
         job.setTotalTasks(job.getTotalTasks()-1);
         job.getTasks().remove(task);

@@ -1,7 +1,6 @@
 package bo.net.tigo.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.DateSerializer;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Date;
 
@@ -14,9 +13,9 @@ public class City {
         private String name;
         private String description;
         private Boolean enabled;
-        @JsonSerialize(using=DateSerializer.class)
+        @JsonIgnore
         private Date createdDate;
-        @JsonSerialize(using=DateSerializer.class)
+        @JsonIgnore
         private Date lastUpdate;
 
     public City(Long id, Integer code, String name, String description, Boolean enabled, Date createdDate, Date lastUpdate) {

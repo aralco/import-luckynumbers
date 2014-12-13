@@ -32,4 +32,15 @@ public class AuditService {
         accessLogDao.save(accessLog);
         logger.info("Audit operation: "+accessLog);
     }
+
+    @Transactional
+    public void audit(String username, Action action)   {
+        AccessLog accessLog = new AccessLog();
+        accessLog.setTimestamp(new Date());
+        accessLog.setUser(username);
+        accessLog.setAction(action.name());
+        accessLog.setDescription(action.name());
+        accessLogDao.save(accessLog);
+        logger.info("Audit operation: "+accessLog);
+    }
 }

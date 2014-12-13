@@ -1,5 +1,7 @@
 package bo.net.tigo.exception;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,11 +17,14 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
  */
 @ControllerAdvice
 public class LuckyNumbersExceptionHandler extends ResponseEntityExceptionHandler {
+    private static final Logger logger = LoggerFactory.getLogger(LuckyNumbersExceptionHandler.class);
+
     @ExceptionHandler(LuckyNumbersGenericException.class)
     @ResponseBody
     ResponseEntity<ErrorMessage> handleException(LuckyNumbersGenericException e)   {
         ErrorMessage errorMessage = new ErrorMessage(e.getErrorCode(), e.getErrorMessage());
-        return new ResponseEntity<ErrorMessage>(errorMessage, HttpStatus.valueOf(e.getErrorCode()));
+        logger.warn("ErrorCode:"+e.getErrorCode()+", ErrorMessage:"+e.getErrorMessage());
+        return new ResponseEntity<ErrorMessage>(errorMessage, HttpStatus.valueOf(Integer.valueOf(e.getErrorCode())));
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
