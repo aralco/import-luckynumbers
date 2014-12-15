@@ -116,7 +116,7 @@ httpHeaders = $httpProvider.defaults.headers;
                     };
 
                 $rootScope.authenticated = false;
-                $rootScope.username = "";
+                $rootScope.loggedUsername = "";
                 $rootScope.$on('$routeChangeStart', function (event, next) {
                     $rootScope.isAuthorized = AuthenticationSharedService.isAuthorized;
                     $rootScope.userRoles = USER_ROLES;

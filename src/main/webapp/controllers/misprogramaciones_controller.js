@@ -1,4 +1,4 @@
-luckynumbersApp.controller('MisProgramacionesController', function ($scope, $filter, $location, $rootScope, Account, Jobs, DeleteJob, ModifyJob, GetCities, NewTask, DeleteTask, UpdateTask, GetTaskFileIn, GetTaskFileOut) {
+luckynumbersApp.controller('MisProgramacionesController', function ($scope, $filter, $location, $rootScope, $timeout, Account, Jobs, DeleteJob, ModifyJob, GetCities, NewTask, DeleteTask, UpdateTask, GetTaskFileIn, GetTaskFileOut) {
 
         $scope.success = null;
         $scope.error = null;
@@ -169,6 +169,21 @@ luckynumbersApp.controller('MisProgramacionesController', function ($scope, $fil
                  deDonde.splice( index, 1 );
         };
 
+        $scope.getNewRow = function(id, deDonde){
+                 var index = -1;
+                 var comArr = eval( deDonde );
+                 for( var i = 0; i < comArr.length; i++ ) {
+                       if( comArr[i].id === id ) {
+                           index = i;
+                           break;
+                        }
+                 }
+                 if( index === -1 ) {
+                      //alert( "Error!" );
+                 }
+                 return deDonde[index];
+        };
+
         $scope.deleteJobByID = function(){
           var params = {id1:$scope.jobActivoId};
           DeleteJob.delete(params);
@@ -221,9 +236,9 @@ luckynumbersApp.controller('MisProgramacionesController', function ($scope, $fil
           var params = {Id:$scope.taskActivaId};
           $scope.taskActiva.from = $scope.modal.desde;
           $scope.taskActiva.to = $scope.modal.hasta;
-          $scope.taskActiva.executionDate = $filter('date')($scope.taskActiva.executionDate,'yyyy-MM-ddTHH:mm:ss') + "-04:00";
-          $scope.taskActiva.createdDate = $filter('date')($scope.taskActiva.createdDate,'yyyy-MM-ddTHH:mm:ss') + "-04:00";
-          $scope.taskActiva.lastUpdate = $filter('date')($scope.taskActiva.lastUpdate,'yyyy-MM-ddTHH:mm:ss') + "-04:00";
+          //$scope.taskActiva.executionDate = $filter('date')($scope.taskActiva.executionDate,'yyyy-MM-ddTHH:mm:ss') + "-04:00";
+          //$scope.taskActiva.createdDate = $filter('date')($scope.taskActiva.createdDate,'yyyy-MM-ddTHH:mm:ss') + "-04:00";
+          //$scope.taskActiva.lastUpdate = $filter('date')($scope.taskActiva.lastUpdate,'yyyy-MM-ddTHH:mm:ss') + "-04:00";
           UpdateTask.post(params,$scope.taskActiva);
           $scope.data = function() { return Jobs.get(); }
           $scope.modal.modalError = false;
@@ -231,10 +246,24 @@ luckynumbersApp.controller('MisProgramacionesController', function ($scope, $fil
         }
 
         $scope.createTaskByID = function(){
-          NewTask.post({jobId: $scope.jobActivoId}, {"city" : parseInt($scope.modal.ciudad),"type":$scope.tipoNumeros,"from" : $scope.modal.desde,"to": $scope.modal.hasta} );
-          $scope.data = function() { return Jobs.get(); }
+          NewTask.post({jobId: $scope.jobActivoId}, {"city" : parseInt($scope.modal.ciudad),"type":$scope.tipoNumeros,"from" : $scope.modal.desde,"to": $scope.modal.hasta}, function(data) {
+            Jobs.get(function(data) {
+                //$scope.showDetalles($scope.seleccionado);
+                $timeout(function() {
+                    $scope.$apply(function(){
+                            $scope.programaciones = data;
+                            $scope.showDetalles($scope.seleccionado);
+                        });
+                  });
+              });
+          },
+          function(error) {
+            $scope.formError = true;
+            $scope.errorMessage = error.statusText;
+
+          });
           $scope.modal.modalError = false;
-            $scope.isModalOpen = false;
+          $scope.isModalOpen = false;
         }
 
         $scope.editDate = function(programa) {
@@ -404,12 +433,12 @@ luckynumbersApp.controller('MisProgramacionesController', function ($scope, $fil
           if (inIs == "In") {
           GetTaskFileIn.get(params, function(data) {
              //$scope.modal.jobSummary = data.toString();
-             $scope.modal.jobSummary = data.join("\n");
+             $scope.modal.jobSummary = data.toString().split(",").join("\n");
            });
           } else {
             GetTaskFileOut.get(params, function(data) {
                //$scope.modal.jobSummary = data.toString();
-               $scope.modal.jobSummary = data.join("\n");
+               $scope.modal.jobSummary = data.toString().split(",").join("\n");
              });
           }
           $scope.funcionBorrar = null;

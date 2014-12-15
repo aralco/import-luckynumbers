@@ -70,7 +70,7 @@
                 <tr>
                         <td colspan="7" style="background-color: #f3f8fb;">
                             <div ng-show="showDetails && (seleccionado.id == programa.id)">
-                            <a href="#" ng-click="createTask();" class="btn btn-xs btn-primary"><span class="fui-plus"></span>&nbsp;&nbsp;Agregar Tarea</a>
+                            <a href="#" ng-click="createTask();"ng-show="soyAdmin(programa)" class="btn btn-xs btn-primary"><span class="fui-plus"></span>&nbsp;&nbsp;Agregar Tarea</a>
                                <table class="table">
                                                <thead>
                                                  <tr>
@@ -82,7 +82,7 @@
                                                    <th>Opciones</th>
                                                  </tr>
                                                </thead>
-                                               <tr ng-repeat="tarea in seleccionado.tasks">
+                                               <tr ng-repeat="tarea in seleccionado.tasks | orderBy : id">
                                                 <td>{{tarea.type}}</td>
                                                  <td>{{friendlyCities[tarea.city]}}</td>
                                                   <td>{{tarea.from}}</td>
