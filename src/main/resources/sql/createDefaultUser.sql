@@ -21,5 +21,5 @@ INSERT INTO "IMPORTLUCKY"."ILN_USER"
 	'Usuario administrador admin',
 	sysdate,
 	1,
-	'admin',
+	'sysportal',
 	'ROLE_ADMIN')

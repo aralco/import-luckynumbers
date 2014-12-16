@@ -98,10 +98,13 @@ public class GetFrozenAndFreeNumbers {
                     logger.info("File generated:"+inFile);
                     taskLog.append("Archivo generado: ").append(fileName).append(" ||");
 
-                    if(inFile.createNewFile())
-                        logger.info("File didn't exist and was successfully created:"+inFile);
-                    else
-                        logger.warn("File already exists:" + inFile);
+                    if(!inFile.exists())    {
+                        if(inFile.createNewFile())
+                            logger.info("File didn't exist and was successfully created:"+inFile);
+                        else
+                            logger.warn("File already exists:" + inFile);
+                    }
+
                     FileOutputStream fileOutputStream = new FileOutputStream(inFile);
                     byte[] contentInBytes = fileContent.getBytes(Charset.forName(UTF_8));
                     fileOutputStream.write(contentInBytes);
