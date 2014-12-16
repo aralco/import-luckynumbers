@@ -13,7 +13,7 @@ luckynumbersApp.controller('CiudadesController', function ($scope, $filter, GetC
 		$scope.ciudades = data;
 	});
 
-	$scope.toggleEdit = function (city, index) {  
+	$scope.toggleEdit = function (city, index) {
 		$scope.editMode = !$scope.editMode;
 		$scope.rowActual = index;
 	};
@@ -27,8 +27,8 @@ luckynumbersApp.controller('CiudadesController', function ($scope, $filter, GetC
 	        }
 	    };
 
-	$scope.toggleAdd = function () {  
-		$scope.addMode = !$scope.addMode;  
+	$scope.toggleAdd = function () {
+		$scope.addMode = !$scope.addMode;
 	};
 
 	$scope.add = function () { 

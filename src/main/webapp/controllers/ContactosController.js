@@ -12,7 +12,7 @@ luckynumbersApp.controller('ContactosController', function ($scope, $filter, Get
 	   $scope.contactos = data;
 	 });
 
-	$scope.toggleEdit = function (usuario, $index) {  
+	$scope.toggleEdit = function (usuario, index) {  
 	        $scope.editMode = !$scope.editMode;
 	        $scope.rowActual = index;
 	    };
