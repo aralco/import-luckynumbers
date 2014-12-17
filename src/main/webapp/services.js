@@ -311,6 +311,7 @@ luckynumbersApp.factory('AuthenticationSharedService', function ($rootScope, $ht
                 Session.invalidate();
                 delete httpHeaders.common['Authorization'];
                 authService.loginCancelled();
+                $rootScope.loggedUsername="";
             }
         };
     });
