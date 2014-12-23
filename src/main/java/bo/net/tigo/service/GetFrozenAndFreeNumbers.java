@@ -39,6 +39,8 @@ public class GetFrozenAndFreeNumbers {
     private InAuditDao inAuditDao;
     @Autowired
     private OutAuditDao outAuditDao;
+    @Autowired
+    private NotificationService notificationService;
 
     @Transactional
     public void processScheduledTasks() throws IOException {
@@ -51,6 +53,8 @@ public class GetFrozenAndFreeNumbers {
             for(Task task:scheduledTasks) {
                 StringBuilder taskLog = new StringBuilder();
                 Date currentDate = calendar.getTime();
+                int jobPercentage=50;
+                int taskPercentage;
                 Job job = task.getJob();
                 logger.info("Start task execution for task=> taskId:"+task.getId()+", status="+task.getStatus()+", executionDate="+task.getExecutionDate()+", job="+job);
                 taskLog.append("Tarea inicializada.||");
@@ -120,11 +124,21 @@ public class GetFrozenAndFreeNumbers {
                     taskLog.append("Obtención de números completada exitosamente.").append("||");
                     task.setUrlin(fileName);
                     calendar.add(Calendar.SECOND, +1);
+                    taskPercentage=50;
                 } else  {
-                    task.setStatus(Status.COMPLETED_PHASE1_WITH_ERRORS.name());
-                    logger.warn("Phase 1 completed with errors. .in File could not be generated.");
-                    taskLog.append("Obtención de números completada con error. ||").append("Causa de error: El archivo .in no pudo ser generado. ||");
+                    task.setStatus(Status.COMPLETED_WITH_ERRORS.name());
+                    logger.warn("Phase 1 completed with errors. .in File could not be generated, because there are not numbers to be processed.");
+                    taskLog.append("Tarea completada con errores. ||").append("Causa de error: El archivo .in no pudo ser generado, debido a que no existen números a ser procesados. ||");
                     task.setUrlin("NA");
+                    task.setUrlout("NA");
+                    task.setLnNumbersInBccs((long) 0);
+                    task.setReservedLuckyNumbers((long) 0);
+                    task.setRolledBackNumbers((long)0);
+                    task.setUnlockedNumbers((long)0);
+                    task.setLcNumbersInBccs((long)0);
+                    task.setDiffReservedNumbers((long)0);
+                    job.setFailedTasks(job.getFailedTasks()+1);
+                    taskPercentage=100;
                 }
                 Long inFiles = inAuditDao.countInFilesByJob(job.getId());
                 Long outFiles = outAuditDao.countOutFilesByJob(job.getId());
@@ -132,11 +146,24 @@ public class GetFrozenAndFreeNumbers {
                 String jobSummary =
                         "Total de archivos .in creados: "+(inFiles==null?0:inFiles)+" ||"+
                         "Total de archivos .out creados: "+(outFiles==null?0:outFiles)+" ||";
+                //job is completed correctly
+                if(job.getTotalTasks().equals(job.getPassedTasks()))    {
+                    job.setState(State.DONE.name());
+                    job.setTotalCoverage(taskPercentage+"%");
+                    notificationService.sendNotification(job.getOwner(), job.getName(), State.DONE);
+                    //job is completed with errors
+                } else if(job.getTotalTasks().equals(job.getPassedTasks()+job.getFailedTasks())) {
+                    job.setState(State.CRITERIA_ACCEPTANCE.name());
+                    job.setTotalCoverage(taskPercentage+"%");
+                    notificationService.sendNotification(job.getOwner(), job.getName(), State.CRITERIA_ACCEPTANCE);
+                } else  {
+                    job.setTotalCoverage(jobPercentage+"%");
+                    logger.info("Job is not yet completed progress:" + job.getTotalCoverage());
+                }
+
                 job.setSummary(jobSummary);
-                float jobPercentage=50;
-                job.setTotalCoverage(jobPercentage+"%");
                 job.setLastUpdate(currentDate);
-                task.setCoverage(jobPercentage+"%");
+                task.setCoverage(taskPercentage+"%");
                 task.setSummary((task.getSummary()==null?"":task.getSummary())+taskLog.toString());
                 task.setLastUpdate(currentDate);
             }

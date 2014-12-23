@@ -49,7 +49,7 @@ public class FindAndSaveLuckyNumbers {
                 long reservedNumbersInBccs=0;
                 long unlockedNumbers=0;
                 long diffReservedNumbers=0;
-                float taskPercentage=100;
+                int taskPercentage=100;
                 StringBuilder taskLog = new StringBuilder();
                 Date currentDate = calendar.getTime();
                 Job job = task.getJob();
@@ -97,10 +97,10 @@ public class FindAndSaveLuckyNumbers {
                     reservedNumbersInBccs=reservedNumberList.size();
                     taskLog.append("Conciliación de LuckyNumbers: || ");
                     if(diffReservedNumbers>0)
-                        taskLog.append("LuckyNumbers en BCCS: ").append(reservedNumbers.size()).append(" || ")
+                        taskLog.append("LuckyNumbers en BCCS (Efectivos): ").append(reservedNumbers.size()).append(" || ")
                                 .append("(").append(diffReservedNumbers).append(" números con estado LN en BCCS descartados.) ||");
                     taskLog.append("LuckyNumbers en BCCS: ").append(reservedNumbersInBccs).append(" || LuckyNumbers en LUCKY_NUMBERS:")
-                            .append(task.getPassed()).append(" ||");
+                            .append(task.getPassed()-rolledBackNumbers).append(" ||");
                     logger.info("Conciliation of LuckyNumbers: LuckyNumbers in BCCS: "+reservedNumbersInBccs+" -VS- LuckyNumbers in LUCKY_NUMBERS:"+
                             task.getPassed());
                 } else {
@@ -141,7 +141,7 @@ public class FindAndSaveLuckyNumbers {
                     job.setFailedTasks(job.getFailedTasks()+1);
                 }
                 task.setLnNumbersInBccs(reservedNumbersInBccs);
-                task.setReservedLuckyNumbers(Long.valueOf(task.getPassed()));
+                task.setReservedLuckyNumbers(task.getPassed()-rolledBackNumbers);
                 task.setRolledBackNumbers(rolledBackNumbers);
                 task.setUnlockedNumbers(unlockedNumbers);
                 task.setLcNumbersInBccs(lockedNumbersInBccs);
@@ -171,11 +171,11 @@ public class FindAndSaveLuckyNumbers {
                 Long outFiles = outAuditDao.countOutFilesByJob(job.getId());
                 logger.info("Total created files: "+(inFiles==null?0:inFiles)+"(.in) -VS- "+(outFiles==null?0:outFiles)+"(.out)");
 
-                job.setLnNumbersInBccs((job.getLnNumbersInBccs()==null?0:job.getLnNumbersInBccs())+reservedNumbersInBccs);
-                job.setReservedLuckyNumbers((job.getReservedLuckyNumbers()==null?0:job.getReservedLuckyNumbers())+task.getPassed());
-                job.setRolledBackNumbers((job.getRolledBackNumbers()==null?0:job.getRolledBackNumbers())+rolledBackNumbers);
-                job.setUnlockedNumbers((job.getUnlockedNumbers()==null?0:job.getUnlockedNumbers())+unlockedNumbers);
-                job.setLcNumbersInBccs((job.getLcNumbersInBccs()==null?0:job.getLcNumbersInBccs())+lockedNumbersInBccs);
+                job.setLnNumbersInBccs((job.getLnNumbersInBccs()==null?0:job.getLnNumbersInBccs())+task.getLnNumbersInBccs());
+                job.setReservedLuckyNumbers((job.getReservedLuckyNumbers()==null?0:job.getReservedLuckyNumbers())+task.getReservedLuckyNumbers());
+                job.setRolledBackNumbers((job.getRolledBackNumbers()==null?0:job.getRolledBackNumbers())+task.getRolledBackNumbers());
+                job.setUnlockedNumbers((job.getUnlockedNumbers()==null?0:job.getUnlockedNumbers())+task.getUnlockedNumbers());
+                job.setLcNumbersInBccs((job.getLcNumbersInBccs()==null?0:job.getLcNumbersInBccs())+task.getLcNumbersInBccs());
 
                 String jobSummary =
                         "Total de archivos .in creados: "+(inFiles==null?0:inFiles)+" ||"+

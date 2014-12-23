@@ -3,9 +3,8 @@
 /* Constants */
 
 var URL = {};
-URL.host = "http://172.31.80.5";
-URL.port = "7026";
-URL.dirFiles ="http://localhost:9000/ftp/in/";
+URL.host = "https://172.31.80.5";
+URL.port = "7036";
 
 luckynumbersApp.constant('USER_ROLES', {
 	'all': '*',

@@ -195,7 +195,7 @@ public class BCCSDao {
                 .addValue(NRO_HASTA, to);
         Map out = unlockNumbersProc
                 .execute(parameterSource);
-        logger.info("unlockNumbers::result="+out.get("unlockedNumbers"));
+        logger.info("unlockNumbers::result="+out.get(UNLOCKED_NUMBERS));
         return unWrap((List<String>) out.get(UNLOCKED_NUMBERS));
     }
 

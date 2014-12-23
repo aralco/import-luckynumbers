@@ -53,7 +53,7 @@ public class OutFileProcessor {
             int processed=0;
             int passed=0;
             int failed=0;
-            float percentage=75;
+            int percentage=75;
             Date currentDate = Calendar.getInstance().getTime();
             String fileName = file.getName();
             logger.info("Filename to Process:"+fileName);
