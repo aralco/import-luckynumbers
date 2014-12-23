@@ -172,7 +172,7 @@ public class SchedulerService {
         persistedTask.setTo(task.getTo());
         persistedTask.setLastUpdate(currentDate);
         taskDao.update(persistedTask);
-        return task;
+        return persistedTask;
     }
 
     @Transactional

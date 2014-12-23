@@ -45,11 +45,13 @@ public class LuckyNumbersDao {
     }
 
     public String unReserveNumber(String number, Boolean reserve)    {
+        logger.info("%%%%%%--StoredProcedure call: "+unReserveNumberProcName+"(numero="+number+", reserva="+reserve+")");
         SqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue(NUMERO, number)
                 .addValue(RESERVE_BCCS, String.valueOf(reserve));
         logger.info("unReserveNumber::"+number+","+reserve);
         Map result = unReserveNumberProc.execute(parameterSource);
+        logger.info("%%%%%%--StoredProcedure result: "+unReserveNumberProcName+"(numero="+number+", reserva="+reserve+") # result:"+(result!=null?result.toString():""));
         return (result!=null?"Rollback successful.":"Rollback failed.");
     }
 

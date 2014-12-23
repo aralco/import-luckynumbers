@@ -4,10 +4,12 @@ import bo.net.tigo.dao.AccessLogDao;
 import bo.net.tigo.dao.CityDao;
 import bo.net.tigo.dao.ContactDao;
 import bo.net.tigo.dao.UserDao;
+import bo.net.tigo.exception.LuckyNumbersGenericException;
 import bo.net.tigo.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,9 +51,20 @@ public class ConfigurationService {
     @Transactional
     public User updateUser(User user)  {
         auditService.audit(Action.EDITAR_USUARIO);
-        user.setLastUpdate(new Date());
-        userDao.update(user);
-        return user;
+        User persistedUser = userDao.findOne(user.getId());
+        if(persistedUser==null)   {
+            throw new LuckyNumbersGenericException(HttpStatus.NOT_FOUND.toString(),"El usuario relacionado no pudo ser encontrado.");
+        }
+        persistedUser.setName(user.getName());
+        persistedUser.setUsername(user.getUsername());
+        persistedUser.setRole(user.getRole());
+        persistedUser.setDescription(user.getDescription());
+        persistedUser.setEmail1(user.getEmail1());
+        persistedUser.setPhone1(user.getPhone1());
+        persistedUser.setEnabled(user.getEnabled());
+        persistedUser.setLastUpdate(new Date());
+        userDao.update(persistedUser);
+        return persistedUser;
     }
 
     @Transactional
@@ -75,9 +88,18 @@ public class ConfigurationService {
     @Transactional
     public Contact updateContact(Contact contact)  {
         auditService.audit(Action.EDITAR_CONTACTO);
-        contact.setLastUpdate(new Date());
-        contactDao.update(contact);
-        return contact;
+        Contact persistedContact = contactDao.findOne(contact.getId());
+        if(persistedContact==null)   {
+            throw new LuckyNumbersGenericException(HttpStatus.NOT_FOUND.toString(),"El contacto relacionado no pudo ser encontrado.");
+        }
+        persistedContact.setName(contact.getName());
+        persistedContact.setDescription(contact.getDescription());
+        persistedContact.setEmail1(contact.getEmail1());
+        persistedContact.setPhone1(contact.getPhone1());
+        persistedContact.setEnabled(contact.getEnabled());
+        persistedContact.setLastUpdate(new Date());
+        contactDao.update(persistedContact);
+        return persistedContact;
     }
 
     @Transactional
@@ -102,9 +124,17 @@ public class ConfigurationService {
     @Transactional
     public City updateCity(City city)  {
         auditService.audit(Action.EDITAR_CIUDAD);
-        city.setLastUpdate(new Date());
-        cityDao.update(city);
-        return city;
+        City persistedCity = cityDao.findOne(city.getId());
+        if(persistedCity==null)   {
+            throw new LuckyNumbersGenericException(HttpStatus.NOT_FOUND.toString(),"La ciudad relacionado no pudo ser encontrada.");
+        }
+        persistedCity.setCode(city.getCode());
+        persistedCity.setName(city.getName());
+        persistedCity.setDescription(city.getDescription());
+        persistedCity.setEnabled(city.getEnabled());
+        persistedCity.setLastUpdate(new Date());
+        cityDao.update(persistedCity);
+        return persistedCity;
     }
 
     @Transactional
