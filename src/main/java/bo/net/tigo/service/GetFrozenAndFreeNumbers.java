@@ -45,9 +45,9 @@ public class GetFrozenAndFreeNumbers {
     @Transactional
     public void processScheduledTasks() throws IOException {
         List<Task> scheduledTasks = taskDao.findScheduledTasksInRange(new Date());
-        logger.info("Total ScheduledAndReScheduled Tasks:" + scheduledTasks.size());
+        logger.info("Total Scheduled Tasks:" + scheduledTasks.size());
         if(scheduledTasks.size()<=0)   {
-            logger.info("No ScheduledAndReScheduled tasks to execute:" + scheduledTasks.size());
+            logger.info("No Scheduled tasks to execute:" + scheduledTasks.size());
         } else  {
             Calendar calendar = Calendar.getInstance();
             for(Task task:scheduledTasks) {
