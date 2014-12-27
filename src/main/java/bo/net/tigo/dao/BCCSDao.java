@@ -157,81 +157,75 @@ public class BCCSDao {
 
     @SuppressWarnings("unchecked")
     public List<InAudit> getFrozenNumbers(int city, String from, String to)    {
-        logger.info("%%%%%%--StoredProcedure call: "+frozenNumbersProcName+"(ciudad="+city+", desde="+from+", hasta="+to+")");
+        logger.info("getFrozenNumbers::%%%%%%--StoredProcedure call: "+frozenNumbersProcName+"(ciudad="+city+", desde="+from+", hasta="+to+")");
         SqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue(SUCURSAL, city)
                 .addValue(NRO_DESDE, from)
                 .addValue(NRO_HASTA, to);
         Map out = frozenNumbersProc
                 .execute(parameterSource);
-        logger.info("%%%%%%--StoredProcedure result: "+frozenNumbersProcName+"(ciudad="+city+", desde="+from+", hasta="+to+") # result:"+print((List<InAudit>)out.get(FROZEN_NUMBERS)));
-        logger.info("getFrozenNumbers::result="+out.get(FROZEN_NUMBERS));
+        logger.info("getFrozenNumbers::%%%%%%--StoredProcedure result: "+frozenNumbersProcName+"(ciudad="+city+", desde="+from+", hasta="+to+") # result:"+print((List<InAudit>)out.get(FROZEN_NUMBERS)));
         return (List<InAudit>)out.get(FROZEN_NUMBERS);
     }
 
     @SuppressWarnings("unchecked")
     public List<InAudit> getFreeNumbers(int city, String from, String to)    {
-        logger.info("%%%%%%--StoredProcedure call: "+freeNumbersProcName+"(ciudad="+city+", desde="+from+", hasta="+to+")");
+        logger.info("getFreeNumbers::%%%%%%--StoredProcedure call: "+freeNumbersProcName+"(ciudad="+city+", desde="+from+", hasta="+to+")");
         SqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue(SUCURSAL, city)
                 .addValue(NRO_DESDE, from)
                 .addValue(NRO_HASTA, to);
         Map out = freeNumbersProc
                 .execute(parameterSource);
-        logger.info("%%%%%%--StoredProcedure result: "+freeNumbersProcName+"(ciudad="+city+", desde="+from+", hasta="+to+") # result:"+print((List<InAudit>)out.get(FREE_NUMBERS)));
-        logger.info("getFreeNumbers::result="+out.get(FREE_NUMBERS));
+        logger.info("getFreeNumbers::%%%%%%--StoredProcedure result: "+freeNumbersProcName+"(ciudad="+city+", desde="+from+", hasta="+to+") # result:"+print((List<InAudit>)out.get(FREE_NUMBERS)));
         return (List<InAudit>)out.get(FREE_NUMBERS);
     }
 
     public String reserveNumber(String number)    {
-        logger.info("%%%%%%--StoredProcedure call: "+reserveNumberProcName+"(numero="+number+")");
+        logger.info("reserveNumber::%%%%%%--StoredProcedure call: "+reserveNumberProcName+"(numero="+number+")");
         SqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue(NROCUENTA, number);
-        logger.info("reserveNumber::result="+number);
         Map result = reserveNumberProc.execute(parameterSource);
-        logger.info("%%%%%%--StoredProcedure result: "+reserveNumberProcName+"(numero="+number+") # result:"+result.get(MENSAJE));
+        logger.info("reserveNumber::%%%%%%--StoredProcedure result: "+reserveNumberProcName+"(numero="+number+") # result:"+result.get(MENSAJE));
         return (String)result.get(MENSAJE);
     }
 
     @SuppressWarnings("unchecked")
     public List<String> unlockNumbers(int city, String from, String to)    {
-        logger.info("%%%%%%--StoredProcedure call: "+unlockNumbersProcName+"(ciudad="+city+", desde="+from+", hasta="+to+")");
+        logger.info("unlockNumbers::%%%%%%--StoredProcedure call: "+unlockNumbersProcName+"(ciudad="+city+", desde="+from+", hasta="+to+")");
         SqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue(SUCURSAL, city)
                 .addValue(NRO_DESDE, from)
                 .addValue(NRO_HASTA, to);
         Map out = unlockNumbersProc
                 .execute(parameterSource);
-        logger.info("%%%%%%--StoredProcedure result: "+unlockNumbersProcName+"(ciudad="+city+", desde="+from+", hasta="+to+") # result:"+out.get(UNLOCKED_NUMBERS));
-        logger.info("unlockNumbers::result="+out.get(UNLOCKED_NUMBERS));
+        logger.info("unlockNumbers::%%%%%%--StoredProcedure result: "+unlockNumbersProcName+"(ciudad="+city+", desde="+from+", hasta="+to+") # result:"+out.get(UNLOCKED_NUMBERS));
         return unWrap((List<String>) out.get(UNLOCKED_NUMBERS));
     }
 
     @SuppressWarnings("unchecked")
     public List<String> getLockedNumbers(int city, String from, String to)    {
-        logger.info("%%%%%%--StoredProcedure call: "+lockedNumbersProcName+"(ciudad="+city+", desde="+from+", hasta="+to+")");
+        logger.info("getLockedNumbers::%%%%%%--StoredProcedure call: "+lockedNumbersProcName+"(ciudad="+city+", desde="+from+", hasta="+to+")");
         SqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue(SUCURSAL, city)
                 .addValue(NRO_DESDE, from)
                 .addValue(NRO_HASTA, to);
         Map out = lockedNumbersProc
                 .execute(parameterSource);
-        logger.info("%%%%%%--StoredProcedure result: "+lockedNumbersProcName+"(ciudad="+city+", desde="+from+", hasta="+to+") # result:"+out.get(LOCKED_NUMBERS));
-        logger.info("getLockedNumbers::result="+out.get(LOCKED_NUMBERS));
+        logger.info("getLockedNumbers::%%%%%%--StoredProcedure result: "+lockedNumbersProcName+"(ciudad="+city+", desde="+from+", hasta="+to+") # result:"+out.get(LOCKED_NUMBERS));
         return unWrap((List<String>)out.get(LOCKED_NUMBERS));
     }
 
     @SuppressWarnings("unchecked")
     public List<String> getReservedNumbers(int city, String from, String to)    {
-        logger.info("%%%%%%--StoredProcedure call: "+reservedNumbersProcName+"(ciudad="+city+", desde="+from+", hasta="+to+")");
+        logger.info("getReservedNumbers::%%%%%%--StoredProcedure call: "+reservedNumbersProcName+"(ciudad="+city+", desde="+from+", hasta="+to+")");
         SqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue(SUCURSAL, city)
                 .addValue(NRO_DESDE, from)
                 .addValue(NRO_HASTA, to);
         Map out = reservedNumbersProc
                 .execute(parameterSource);
-        logger.info("%%%%%%--StoredProcedure result: "+reservedNumbersProcName+"(ciudad="+city+", desde="+from+", hasta="+to+") # result:"+out.get(RESERVED_NUMBERS));
-        logger.info("getReservedNumbers::result="+out.get(RESERVED_NUMBERS));
+        logger.info("getReservedNumbers::%%%%%%--StoredProcedure result: "+reservedNumbersProcName+"(ciudad="+city+", desde="+from+", hasta="+to+") # result:"+out.get(RESERVED_NUMBERS));
         return unWrap((List<String>)out.get(RESERVED_NUMBERS));
     }
 
