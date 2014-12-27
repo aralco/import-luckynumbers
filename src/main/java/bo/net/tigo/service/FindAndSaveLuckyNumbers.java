@@ -56,14 +56,14 @@ public class FindAndSaveLuckyNumbers {
                 List<OutAudit> outAuditList = outAuditDao.findByTask(task.getId());
                 for(OutAudit outAudit : outAuditList )  {
                     if(outAudit.getCodePassed().equals(0)) {
-                        logger.info("Lucky Number to be reserved, calling SP3_RERSERVANL_NROCUENTACOYLC:"+outAudit.getNumber());
+                        logger.info("Lucky Number to be reserved:"+outAudit.getNumber());
                         String message = bccsDao.reserveNumber(outAudit.getNumber());
                         if(message!=null && message.contains("OK"))  {
                             logger.info("Lucky Number has been correctly reserved on BCCS:"+message);
                             outAudit.setLuckyReserved(true);
                             reservedNumberList.add(outAudit.getNumber());
                         } else  {
-                            logger.info("Lucky Number "+outAudit.getNumber()+" canNOT been reserved on BCCS, calling rollback CONCILI_RESERVE_LUCKY_BCCS:"+message);
+                            logger.info("Lucky Number "+outAudit.getNumber()+" could not be reserved on BCCS, calling rollback:"+message);
                             taskLog.append("Lucky Number ").append(outAudit.getNumber()).append(" no pudo ser reservado en BCCS, haciendo Rollback.").append(" ||");
                             rolledBackNumbers++;
                             taskCompletedOK=false;
@@ -84,8 +84,7 @@ public class FindAndSaveLuckyNumbers {
                 taskLog.append("Total de Números Lucky reservados en BCCS: ").append(reservedNumberList.size()).append(" ||");
                 //CONCILIATION: Call BCCS to ask for numbers with state LN, call only if lucky numbers were reserved
                 if(task.getPassed()>0 && reservedNumberList.size()>0)  {
-                    logger.info("Conciliation of LuckyNumbers: Calling BCCS:SP1_LNROSLNXSUCURSALNRODESDEHASTA to ask for LN numbers using values:city="+
-                            task.getCity()+",from="+task.getFrom()+",to="+task.getTo());
+                    logger.info("Conciliation of LuckyNumbers:");
                     List<String> reservedNumbers = bccsDao.getReservedNumbers(task.getCity(), task.getFrom(), task.getTo());
                     if(task.getPassed()!=reservedNumberList.size() || reservedNumbers.size()!=reservedNumberList.size()) {
                         diffReservedNumbers = Math.abs(reservedNumbers.size()-reservedNumberList.size());
@@ -109,14 +108,14 @@ public class FindAndSaveLuckyNumbers {
 
                 //Call to BCCS to change state of numbers from LC(locked) to LI(free), call only for FREE numbers
                 if(task.getType().equals(Type.FREE.name())) {
-                    logger.info("Unlock free numbers on BCCS, calling :SP2_LNROSLCXSUCURSALNRODESDEHASTAPORC_ACTESTLI1 to unlock numbers using values:city="+task.getCity()+",from="+task.getFrom()+",to="+task.getTo());
+                    logger.info("Unlock free numbers on BCCS:");
                     List<String> unlockedNumberList = bccsDao.unlockNumbers(task.getCity(),task.getFrom(),task.getTo());
                     unlockedNumbers=unlockedNumberList.size();
                     logger.info("Total unlockedNumbers on BCCS: "+unlockedNumberList.size());
                     taskLog.append("Total números desbloqueados en BCCS: ").append(unlockedNumberList.size()).append(" ||");
 
                     //CONCILIATION: Call to BCCS to ask for LC(locked) numbers after unlocking, call only for FREE numbers
-                    logger.info("Conciliation of locked numbers on BCCS: Calling BCCS:SP1_LNROSLCXSUCURSALNRODESDEHASTA to list unlocked numbers using values:city="+task.getCity()+",from="+task.getFrom()+",to="+task.getTo());
+                    logger.info("Conciliation of locked numbers on BCCS:");
                     List<String> lockedNumbers = bccsDao.getLockedNumbers(task.getCity(), task.getFrom(), task.getTo());
                     lockedNumbersInBccs=lockedNumbers.size();
                     logger.info("Conciliation for unlocked numbers with LC state in BCCS:"+lockedNumbers.size());
