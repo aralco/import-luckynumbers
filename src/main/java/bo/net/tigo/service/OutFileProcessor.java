@@ -146,7 +146,7 @@ public class OutFileProcessor {
             File newFile = new File(fileFullName);
             do  {
                 try {
-                    Thread.sleep(10000);
+                    Thread.sleep(60000);
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }
