@@ -41,15 +41,16 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
             throws AuthenticationException {
         logger.info("Authentication to authenticate:" + authentication);
         if(authentication!=null)    {
-            UserDetails userDetails = loadUserByUsername(authentication.getPrincipal().toString());
+            String providedUsername = authentication.getPrincipal().toString();
+            UserDetails userDetails = loadUserByUsername(providedUsername);
             if(userDetails==null)
-                throw new UsernameNotFoundException("El usuario "+authentication.getPrincipal().toString()+" no existe.");
+                throw new UsernameNotFoundException("El usuario "+ providedUsername +" no existe.");
 //PROD MODE
             authentication = activeDirectoryLdapAuthenticationProvider.authenticate(authentication);
             if(authentication!=null && authentication.isAuthenticated())    {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(authentication.getPrincipal(), authentication.getCredentials(), userDetails.getAuthorities());
                 logger.info("User successfully authenticated - authenticate:"+usernamePasswordAuthenticationToken);
-                auditService.audit(Action.AUTENTICACION);
+                auditService.audit(providedUsername, Action.AUTENTICACION);
                 return usernamePasswordAuthenticationToken;
 //DEV MODE
 //            if(authentication.getPrincipal().equals("sysportal")&& authentication.getCredentials().equals("Sysp0rt4l")) {
