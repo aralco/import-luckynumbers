@@ -184,11 +184,11 @@
     </oauth:authorization-server>
 
     <security:authentication-manager id="userAuthenticationManager">
-        <security:authentication-provider>
-            <security:user-service>
-                <security:user name="admin" password="admin" authorities="ROLE_ADMIN"/>
-            </security:user-service>
-        </security:authentication-provider>
+        <!--<security:authentication-provider>-->
+            <!--<security:user-service>-->
+                <!--<security:user name="admin" password="admin" authorities="ROLE_ADMIN"/>-->
+            <!--</security:user-service>-->
+        <!--</security:authentication-provider>-->
         <security:authentication-provider ref="userAuthenticationProvider" />
     </security:authentication-manager>
 
@@ -227,13 +227,50 @@
         <property name="convertSubErrorCodesToExceptions" value="true"/>
     </bean>
 
-    <!--Starting taskScheduler-->
-    <task:scheduled-tasks scheduler="luckyNumbersScheduler">
-        <!--Improve to start using trigger-->
-        <task:scheduled ref="getFrozenAndFreeNumbers" method="processScheduledTasks" fixed-delay="${scheduler.fixedDelay}"/>
-        <task:scheduled ref="findAndSaveLuckyNumbers" method="processStartedPhase2Tasks" fixed-delay="${scheduler.fixedDelay}"/>
-    </task:scheduled-tasks>
-    <task:scheduler id="luckyNumbersScheduler" pool-size="10"/>
+    <!--jobdetail to processScheduledTasks-->
+    <bean id="processScheduledTasksJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="jobClass" value="bo.net.tigo.service.TaskSchedulerJob"/>
+        <property name="durability" value="true"/>
+    </bean>
+
+    <!--jobdetail to processStartedPhase2Tasks-->
+    <bean id="processStartedPhase2TasksJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="jobClass" value="bo.net.tigo.service.MonitorProcessedNumbersJob"/>
+        <property name="durability" value="true"/>
+    </bean>
+
+    <!-- Trigger to run the processScheduledTasksJob every {3} seconds with initial delay of 10 second -->
+    <bean id="inTrigger"  class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+        <property name="jobDetail" ref="processScheduledTasksJob"/>
+        <property name="startDelay" value="10000" />
+        <property name="repeatInterval" value="${scheduler.fixedDelay}" />
+    </bean>
+
+    <!-- Trigger to run the processStartedPhase2TasksJob every {3} seconds with initial delay of 10 second -->
+    <bean id="outTrigger"  class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+        <property name="jobDetail" ref="processStartedPhase2TasksJob"/>
+        <property name="startDelay" value="10000" />
+        <property name="repeatInterval" value="${scheduler.fixedDelay}" />
+    </bean>
+
+    <bean id="autowiringSpringBeanJobFactory" class="bo.net.tigo.service.AutowiringSpringBeanJobFactory"/>
+
+    <!--Starting QuartzScheduler-->
+    <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="configLocation" value="classpath:quartz.properties"/>
+        <property name="dataSource" ref="oracleDataSource"/>
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="applicationContextSchedulerContextKey">
+            <value>applicationContext</value>
+        </property>
+        <property name="jobFactory" ref="autowiringSpringBeanJobFactory"/>
+        <property name="triggers">
+            <list>
+                <ref bean="inTrigger"/>
+                <ref bean="outTrigger"/>
+            </list>
+        </property>
+    </bean>
 
     <!--FTP Server-->
     <bean id="ftpSessionFactory" class="org.springframework.integration.ftp.session.DefaultFtpSessionFactory">
