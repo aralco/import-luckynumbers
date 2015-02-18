@@ -227,6 +227,13 @@
         <property name="convertSubErrorCodesToExceptions" value="true"/>
     </bean>
 
+    <!--Starting fileCleaner-->
+    <!--<task:scheduled-tasks scheduler="fileCleanerScheduler">-->
+        <!--<task:scheduled ref="inFileCleaner" method="deleteFiles" fixed-delay="${ftp.delay}"/>-->
+    <!--</task:scheduled-tasks>-->
+    <!--<task:scheduler id="fileCleanerScheduler" pool-size="10"/>-->
+    <!--<task:annotation-driven/>-->
+
     <!--jobdetail to processScheduledTasks-->
     <bean id="processScheduledTasksJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
         <property name="jobClass" value="bo.net.tigo.service.TaskSchedulerJob"/>
@@ -243,14 +250,14 @@
     <bean id="inTrigger"  class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
         <property name="jobDetail" ref="processScheduledTasksJob"/>
         <property name="startDelay" value="10000" />
-        <property name="repeatInterval" value="${scheduler.fixedDelay}" />
+        <property name="repeatInterval" value="${scheduler.trigger.in.repeatInterval}" />
     </bean>
 
     <!-- Trigger to run the processStartedPhase2TasksJob every {3} seconds with initial delay of 10 second -->
     <bean id="outTrigger"  class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
         <property name="jobDetail" ref="processStartedPhase2TasksJob"/>
         <property name="startDelay" value="10000" />
-        <property name="repeatInterval" value="${scheduler.fixedDelay}" />
+        <property name="repeatInterval" value="${scheduler.trigger.out.repeatInterval}" />
     </bean>
 
     <bean id="autowiringSpringBeanJobFactory" class="bo.net.tigo.service.AutowiringSpringBeanJobFactory"/>

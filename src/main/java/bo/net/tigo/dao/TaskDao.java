@@ -28,4 +28,6 @@ public interface TaskDao {
     public List<Task> findByStatus(Status status);
 
     public Task findByFileName(String filename);
+
+    public List<Task> findBetweenDates(Date fromDate, Date toDate);
 }

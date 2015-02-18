@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -53,6 +54,7 @@ public class GetFrozenAndFreeNumbers {
             for(Task task:scheduledTasks) {
                 StringBuilder taskLog = new StringBuilder();
                 Date currentDate = calendar.getTime();
+                boolean noStoredProcedureError=false;
                 int jobPercentage=50;
                 int taskPercentage;
                 Job job = task.getJob();
@@ -65,13 +67,18 @@ public class GetFrozenAndFreeNumbers {
                 }
                 logger.info("Start task execution for task=> taskId:" + task.getId() + ", status=" + task.getStatus() + ", executionDate=" + task.getExecutionDate() + ", job=" + task.getJob().getState());
                 taskLog.append("Obteniendo números ");
-                List<InAudit> retrievedNumbers;
-                if(task.getType().equals(Type.FREE.name())) {
-                    taskLog.append("LIBRES. ||");
-                    retrievedNumbers = bccsDao.getFreeNumbers(task.getCity(), task.getFrom(), task.getTo());
-                } else  {
-                    taskLog.append("CONGELADOS. ||");
-                    retrievedNumbers = bccsDao.getFrozenNumbers(task.getCity(), task.getFrom(), task.getTo());
+                List<InAudit> retrievedNumbers = new ArrayList<InAudit>(0);
+                try {
+                    if(task.getType().equals(Type.FREE.name())) {
+                        taskLog.append("LIBRES. ||");
+                        retrievedNumbers = bccsDao.getFreeNumbers(task.getCity(), task.getFrom(), task.getTo());
+                    } else  {
+                        taskLog.append("CONGELADOS. ||");
+                        retrievedNumbers = bccsDao.getFrozenNumbers(task.getCity(), task.getFrom(), task.getTo());
+                    }
+                }catch (Exception e)    {
+                    logger.error("Stored procedure to get free/frozen numbers doesn't exist or is not available.");
+                    noStoredProcedureError=true;
                 }
                 logger.info("Total retrieved numbers:"+retrievedNumbers.toString());
                 taskLog.append("Total de números obtenidos: ").append(retrievedNumbers.size()).append(" ||");
@@ -127,8 +134,14 @@ public class GetFrozenAndFreeNumbers {
                     taskPercentage=50;
                 } else  {
                     task.setStatus(Status.COMPLETED_WITH_ERRORS.name());
-                    logger.warn("Phase 1 completed with errors. .in File could not be generated, because there are not numbers to be processed.");
-                    taskLog.append("Tarea completada con errores. ||").append("Causa de error: El archivo .in no pudo ser generado, debido a que no existen números a ser procesados. ||");
+                    String errorCause = "";
+                    if(noStoredProcedureError)  {
+                        errorCause = "El procedimiento almacenado para obtener números libres y/o congelados no existe.";
+                    } else  {
+                        errorCause = "El archivo .in no pudo ser generado, debido a que no existen números a ser procesados.";
+                        logger.warn("Phase 1 completed with errors. .in File could not be generated, because there are not numbers to be processed.");
+                    }
+                    taskLog.append("Tarea completada con errores. ||").append("Causa de error: ").append(errorCause).append(" ||");
                     task.setUrlin("NA");
                     task.setUrlout("NA");
                     task.setLnNumbersInBccs((long) 0);

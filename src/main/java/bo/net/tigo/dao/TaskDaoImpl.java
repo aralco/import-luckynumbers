@@ -92,4 +92,16 @@ public class TaskDaoImpl implements TaskDao {
                 .setParameter("filename",filename)
                 .uniqueResult();
     }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Task> findBetweenDates(Date fromDate, Date toDate) {
+        Session session = sessionFactory.getCurrentSession();
+        return session.createQuery("from Task " +
+                "where executionDate between :fromDate " +
+                "and :toDate")
+                .setParameter("fromDate", fromDate)
+                .setParameter("toDate", toDate).list();
+
+    }
 }

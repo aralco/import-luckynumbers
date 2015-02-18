@@ -37,7 +37,7 @@ public class FindAndSaveLuckyNumbers {
     public void processStartedPhase2Tasks() {
         List<Task> startedPhase2Tasks = taskDao.findByStatus(Status.STARTED_PHASE2);
         logger.info("Total startedPhase2Tasks Tasks:" + startedPhase2Tasks.size());
-        if(startedPhase2Tasks.size()>=0)    {
+        if(startedPhase2Tasks.size()>0)    {
             Calendar calendar = Calendar.getInstance();
             for(Task task:startedPhase2Tasks) {
                 boolean taskCompletedOK=true;
@@ -57,7 +57,15 @@ public class FindAndSaveLuckyNumbers {
                 for(OutAudit outAudit : outAuditList )  {
                     if(outAudit.getCodePassed().equals(0)) {
                         logger.info("Lucky Number to be reserved:"+outAudit.getNumber());
-                        String message = bccsDao.reserveNumber(outAudit.getNumber());
+                        String message;
+                        try {
+                            message = bccsDao.reserveNumber(outAudit.getNumber());
+                        } catch (Exception e)   {
+                            taskCompletedOK=false;
+                            logger.error("Stored procedure to reserve numbers doesn't exist or is not available.");
+                            errorCause.append("El procedimiento almacenado para reservar números lucky no existe. ||");
+                            break;
+                        }
                         if(message!=null && message.contains("OK"))  {
                             logger.info("Lucky Number has been correctly reserved on BCCS:"+message);
                             outAudit.setLuckyReserved(true);
@@ -68,7 +76,14 @@ public class FindAndSaveLuckyNumbers {
                             rolledBackNumbers++;
                             taskCompletedOK=false;
                             errorCause.append("Lucky Number ").append(outAudit.getNumber()).append(" no pudo ser reservado en BCCS. ||");
-                            luckyNumbersDao.unReserveNumber(outAudit.getNumber(), false);
+                            try {
+                                luckyNumbersDao.unReserveNumber(outAudit.getNumber(), false);
+                            } catch (Exception e)   {
+                                taskCompletedOK=false;
+                                logger.error("Stored procedure to unreserve numbers doesn't exist or is not available.");
+                                errorCause.append("El procedimiento almacenado para quitar reservar de números lucky no existe. ||");
+                                break;
+                            }
                             logger.info("Rollback completed for number:"+outAudit.getNumber());
                             taskLog.append("Rollback completado para el número: ").append(outAudit.getNumber()).append(" ||");
                         }
@@ -85,7 +100,14 @@ public class FindAndSaveLuckyNumbers {
                 //CONCILIATION: Call BCCS to ask for numbers with state LN, call only if lucky numbers were reserved
                 if(task.getPassed()>0 && reservedNumberList.size()>0)  {
                     logger.info("Conciliation of LuckyNumbers:");
-                    List<String> reservedNumbers = bccsDao.getReservedNumbers(task.getCity(), task.getFrom(), task.getTo());
+                    List<String> reservedNumbers = new ArrayList<String>(0);
+                    try {
+                        reservedNumbers = bccsDao.getReservedNumbers(task.getCity(), task.getFrom(), task.getTo());
+                    } catch (Exception e)   {
+                        taskCompletedOK=false;
+                        logger.error("Stored procedure to list reserved numbers doesn't exist or is not available.");
+                        errorCause.append("El procedimiento almacenado para listar números reservados no existe. ||");
+                    }
                     if(task.getPassed()!=reservedNumberList.size() || reservedNumbers.size()!=reservedNumberList.size()) {
                         diffReservedNumbers = Math.abs(reservedNumbers.size()-reservedNumberList.size());
                         if(!reservedNumbers.containsAll(reservedNumberList))    {
@@ -109,14 +131,30 @@ public class FindAndSaveLuckyNumbers {
                 //Call to BCCS to change state of numbers from LC(locked) to LI(free), call only for FREE numbers
                 if(task.getType().equals(Type.FREE.name())) {
                     logger.info("Unlock free numbers on BCCS:");
-                    List<String> unlockedNumberList = bccsDao.unlockNumbers(task.getCity(),task.getFrom(),task.getTo());
+                    List<String> unlockedNumberList = new ArrayList<String>(0);
+                    try {
+                        unlockedNumberList = bccsDao.unlockNumbers(task.getCity(),task.getFrom(),task.getTo());
+                    } catch (Exception e)   {
+                        taskCompletedOK=false;
+                        logger.error("Stored procedure to unlock numbers doesn't exist or is not available.");
+                        errorCause.append("El procedimiento almacenado para desbloquear números no existe. ||");
+                    }
+
                     unlockedNumbers=unlockedNumberList.size();
                     logger.info("Total unlockedNumbers on BCCS: "+unlockedNumberList.size());
                     taskLog.append("Total números desbloqueados en BCCS: ").append(unlockedNumberList.size()).append(" ||");
 
                     //CONCILIATION: Call to BCCS to ask for LC(locked) numbers after unlocking, call only for FREE numbers
                     logger.info("Conciliation of locked numbers on BCCS:");
-                    List<String> lockedNumbers = bccsDao.getLockedNumbers(task.getCity(), task.getFrom(), task.getTo());
+                    List<String> lockedNumbers = new ArrayList<String>(0);
+                    try {
+                        lockedNumbers = bccsDao.getLockedNumbers(task.getCity(), task.getFrom(), task.getTo());
+                    } catch (Exception e)   {
+                        taskCompletedOK=false;
+                        logger.error("Stored procedure to list locked numbers doesn't exist or is not available.");
+                        errorCause.append("El procedimiento almacenado para listar números bloqueados no existe. ||");
+                    }
+
                     lockedNumbersInBccs=lockedNumbers.size();
                     logger.info("Conciliation for unlocked numbers with LC state in BCCS:"+lockedNumbers.size());
                     taskLog.append("Total de números bloqueados en BCCS:").append(lockedNumbers.size()).append(" ||");
