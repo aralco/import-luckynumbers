@@ -63,7 +63,6 @@ public class OutFileProcessor {
             }
 
             String shortFilename = fileName.substring(0,15);
-            logger.info("array Size:"+shortFilename.length()+",values:"+shortFilename);
             Task task = taskDao.findByFileName(shortFilename);
             if(task==null)  {
                 throw new LuckyNumbersGenericException(HttpStatus.NOT_FOUND.toString(),"La tarea relacionada con el archivo:"+fileName+" no pudo ser encontrada o la tarea aún no existe.");

@@ -228,11 +228,7 @@
     </bean>
 
     <!--Starting fileCleaner-->
-    <!--<task:scheduled-tasks scheduler="fileCleanerScheduler">-->
-        <!--<task:scheduled ref="inFileCleaner" method="deleteFiles" fixed-delay="${ftp.delay}"/>-->
-    <!--</task:scheduled-tasks>-->
-    <!--<task:scheduler id="fileCleanerScheduler" pool-size="10"/>-->
-    <!--<task:annotation-driven/>-->
+    <task:annotation-driven/>
 
     <!--jobdetail to processScheduledTasks-->
     <bean id="processScheduledTasksJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
