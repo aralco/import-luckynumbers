@@ -4,10 +4,12 @@ import bo.net.tigo.dao.BCCSDao;
 import bo.net.tigo.dao.InAuditDao;
 import bo.net.tigo.dao.OutAuditDao;
 import bo.net.tigo.dao.TaskDao;
+import bo.net.tigo.exception.LuckyNumbersGenericException;
 import bo.net.tigo.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.integration.Message;
 import org.springframework.integration.MessageChannel;
 import org.springframework.integration.support.MessageBuilder;
@@ -72,10 +74,15 @@ public class GetFrozenAndFreeNumbers {
                     if(task.getType().equals(Type.FREE.name())) {
                         taskLog.append("LIBRES. ||");
                         retrievedNumbers = bccsDao.getFreeNumbers(task.getCity(), task.getFrom(), task.getTo());
-                    } else  {
+                    } else if(task.getType().equals(Type.FROZEN.name()))  {
                         taskLog.append("CONGELADOS. ||");
                         retrievedNumbers = bccsDao.getFrozenNumbers(task.getCity(), task.getFrom(), task.getTo());
+                    } else  {
+                        throw new LuckyNumbersGenericException(HttpStatus.BAD_REQUEST.toString(),"Task doesn't have a valid type. FREE/FROZEN.");
                     }
+                }catch (LuckyNumbersGenericException e)    {
+                    logger.error(e.getMessage());
+                    noStoredProcedureError=true;
                 }catch (Exception e)    {
                     logger.error("Stored procedure to get free/frozen numbers doesn't exist or is not available.");
                     noStoredProcedureError=true;

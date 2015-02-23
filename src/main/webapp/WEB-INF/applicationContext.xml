@@ -242,6 +242,12 @@
         <property name="durability" value="true"/>
     </bean>
 
+    <!--jobdetail to processOutFile-->
+    <bean id="processOutFilesJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="jobClass" value="bo.net.tigo.service.OutProcessorJob"/>
+        <property name="durability" value="true"/>
+    </bean>
+
     <!-- Trigger to run the processScheduledTasksJob every {3} seconds with initial delay of 10 second -->
     <bean id="inTrigger"  class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
         <property name="jobDetail" ref="processScheduledTasksJob"/>
@@ -249,11 +255,18 @@
         <property name="repeatInterval" value="${scheduler.trigger.in.repeatInterval}" />
     </bean>
 
-    <!-- Trigger to run the processStartedPhase2TasksJob every {3} seconds with initial delay of 10 second -->
+    <!-- Trigger to run the processStartedPhase2TasksJob every {30} seconds with initial delay of 10 second -->
     <bean id="outTrigger"  class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
         <property name="jobDetail" ref="processStartedPhase2TasksJob"/>
         <property name="startDelay" value="10000" />
         <property name="repeatInterval" value="${scheduler.trigger.out.repeatInterval}" />
+    </bean>
+
+    <!-- Trigger to run the processOutFilesJob every {60} seconds with initial delay of 10 second -->
+    <bean id="outProcTrigger"  class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+        <property name="jobDetail" ref="processOutFilesJob"/>
+        <property name="startDelay" value="15000" />
+        <property name="repeatInterval" value="${ftp.delay}" />
     </bean>
 
     <bean id="autowiringSpringBeanJobFactory" class="bo.net.tigo.service.AutowiringSpringBeanJobFactory"/>
@@ -271,6 +284,7 @@
             <list>
                 <ref bean="inTrigger"/>
                 <ref bean="outTrigger"/>
+                <ref bean="outProcTrigger"/>
             </list>
         </property>
     </bean>
@@ -312,7 +326,7 @@
         <int:queue/>
     </int:channel>
 
-    <int:service-activator input-channel="ftpChannelIN" ref="outFileProcessor" method="processOutFile">
+    <int:service-activator input-channel="ftpChannelIN" ref="outFilter" method="filterOutFile">
         <int:poller fixed-delay="${ftp.delay}"/>
     </int:service-activator>
 
