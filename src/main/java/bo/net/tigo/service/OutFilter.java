@@ -36,7 +36,6 @@ public class OutFilter {
         BufferedReader bufferedReader = null;
         try {
             bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(file), Charset.forName(UTF_8)));
-            String line;
             String fileName = file.getName();
             logger.info("Filename to Filter:"+fileName);
             boolean goodFileToFilter = Pattern.matches("[0-9]{8}_[0-9]{6}\\.out", fileName);
@@ -56,6 +55,7 @@ public class OutFilter {
                 linesInFile++;
             }
             Long rowsIn = inAuditDao.countInRowsByTask(task.getId());
+            logger.info("FIle ROWS="+linesInFile+", Table ROWS= "+rowsIn);
             if(rowsIn!=linesInFile)    {
                 logger.warn("Does file exists?:"+file+", fullname:"+fileFullName);
                 if(file.delete())   {
